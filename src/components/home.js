@@ -7,27 +7,41 @@ export default function Home() {
     const [houses, setHouses] = useState([]);
     const [search, setSearch] = useState('');
 
-    // async function deleteClothe(id) {
-    //     if (window.confirm("Bạn muốn xóa sản phẩm này chứ???")) {
-    //         const response = await axios.delete(`http://localhost:3001/products/${id}`)
-    //         if (response.data) {
-    //             await getList();
-    //         } else {
-    //             console.error("Không thể xóa")
-    //         }
-    //     }
-    // }
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPage, setItemsPage] = useState(5);
+    const totalPages = Math.ceil(houses.length / itemsPage);
+
+    const getCurrentPageData = () => {
+        const startIndex = (currentPage - 1) * itemsPage;
+        const endIndex = startIndex + itemsPage;
+        return houses.slice(startIndex, endIndex);
+    };
+    const currentPageData = getCurrentPageData();
+
+    const renderPageItems = () => {
+        const pageItems = [];
+        for (let i = 1; i <= totalPages; i++) {
+            const isActive = i === currentPage ? 'active' : '';
+
+            pageItems.push(
+                <li className={`page-item ${isActive}`} key={i}>
+                    <a className="page-link" onClick={() => currentPage + 1}>{i}</a>
+                </li>
+            );
+        }
+        return pageItems;
+    };
 
     async function getList() {
         const response = await axios.get(`http://localhost:8080/api/house?name=${search}`);
-        console.log(response.data)
+        // console.log(response.data)
         setHouses(response.data)
 
     };
 
     useEffect(() => {
         getList()
-    },[search])
+    }, [search])
 
     return (
         <div>
@@ -44,7 +58,8 @@ export default function Home() {
                             <div className="navbar-nav">
                                 <ul className="nav nav-underline">
                                     <li className="nav-item">
-                                        <a className="nav-link active" aria-current="page" href="/home">Trang chủ</a>
+                                        <a className="nav-link active" aria-current="page" href="/home">Trang
+                                            chủ</a>
                                     </li>
                                     <li className="nav-item">
                                         <a className="nav-link" href="#">Link</a>
@@ -84,11 +99,11 @@ export default function Home() {
                     />
                 </div>
             </div>
-            {houses.map(house => <div className="container">
+            {currentPageData.map(house => <div className="container">
                 <div className="card mb-3" style={{maxWidth: '1198.5px'}}>
                     <div className="row g-0">
                         <div className="col-md-4">
-                            <img src={process.env.PUBLIC_URL + '/' + (house.image?.nameImage || '')}
+                            <img src={process.env.PUBLIC_URL + '/img/' + (house.images[0]?.nameImage || '')}
                                  className="img-fluid rounded-start" alt="..."/>
                         </div>
                         <div className="col-md-8">
@@ -97,6 +112,7 @@ export default function Home() {
                                 <p className="card-text"></p>
                                 <p className="card-text"><small className="text-body-secondary">Mô
                                     tả: {house.description}</small></p>
+                                <h5 className="card-text">{house.status.name}</h5>
                             </div>
                         </div>
                         {/*<Link to={"/#"}>*/}
@@ -110,11 +126,19 @@ export default function Home() {
                     </div>
                 </div>
             </div>)}
-
-
+            <nav aria-label="...">
+                <ul className="pagination">
+                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                        <a className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>Previous</a>
+                    </li>
+                    {renderPageItems()}
+                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                        <a className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
-
-    )
+    );
 }
 

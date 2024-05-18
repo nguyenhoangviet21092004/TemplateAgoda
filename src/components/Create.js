@@ -1,115 +1,81 @@
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {Button} from "bootstrap";
-import {useNavigate, useSearchParams} from "react-router-dom";
-import {useEffect, useState} from "react";
-import async from "async";
-import {useFormik} from "formik";
+import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
 
 function Create() {
-
-    const history = useNavigate();
-    const [name, setName] = useState('');
-    const [address, setAddress] = useState('');
-    const [numberOfBedroom, setNumberOfBedroom] = useState('');
-    const [numberOfBathRoom, setNumberOfBathRoom] = useState('');
-    const [price, setPrice] = useState('');
-    const [description, setDescription] = useState('');
-    const [nameRoom, setNameRoom] = useState('');
-    const [typeRoom, setTypeRoom] = useState('');
+    const navigate = useNavigate();
     const [image, setImage] = useState(null);
+    const [typeRooms, setTypeRooms] = useState([]);
 
-    const [typeRooms, setTypeRooms] = useState([])
-
-    async function getList() {
-        const rs = await axios.get("http://localhost:8080/api/type-room");
-        setTypeRooms(rs.data);
-
-    };
-
+    // Fetch type rooms data
     useEffect(() => {
-        getList()
-    },[])
-
-    async function createHouse(e) {
-        e.preventDefault()
-
-        const response = await axios.post("http://localhost:8080/api/house",
-            {
-                name: name,
-                address: address,
-                numberOfBedroom: numberOfBedroom,
-                numberOfBathRoom: numberOfBathRoom,
-                rooms: [
-                    {
-                        nameRoom: nameRoom,
-                        typeId: typeRoom
-                    }],
-                price: price,
-                description: description,
-                image: image
+        async function getTypeRooms() {
+            try {
+                const response = await axios.get("http://localhost:8080/api/type-room");
+                setTypeRooms(response.data);
+            } catch (error) {
+                console.error("Error fetching type rooms:", error);
             }
-        );
-        if (response.data) {
-            history('/home');
         }
+        getTypeRooms();
+    }, []);
+
+    // Form submission logic using Formik
+    const formAdd = useFormik({
+        initialValues: {
+            name: "",
+            address: "",
+            description: "",
+            price: "",
+            numberOfBedRoom: "",
+            numberOfBathRoom: "",
+            accountId: "1", // Set default accountId or handle dynamically
+            rooms: [{ name: "", typeId: "" }],
+        },
+        onSubmit: async (values) => {
+            try {
+                const formData = new FormData();
+                formData.append("name", values.name);
+                formData.append("address", values.address);
+                formData.append("description", values.description);
+                formData.append("price", values.price);
+                formData.append("numberOfBedRoom", values.numberOfBedRoom);
+                formData.append("numberOfBathRoom", values.numberOfBathRoom);
+                formData.append("accountId", values.accountId);
+
+                values.rooms.forEach((room, index) => {
+                    formData.append(`rooms[${index}].name`, room.name);
+                    formData.append(`rooms[${index}].typeId`, room.typeId);
+                });
+
+                formData.append("image", image);
+
+                await axios.post("http://localhost:8080/api/house", formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+
+                // Navigate to home page after successful submission
+                navigate('/');
+            } catch (error) {
+                console.error("Error submitting form:", error);
+            }
+        },
+    });
+
+    // Handle image change
+    function handleImageChange(e) {
+        const file = e.target.files[0];
+        setImage(file);
     }
-
-
-    // const navigate = useNavigate();
-    //
-    // console.log("da vao")
-    // const formAdd = useFormik({
-    //     initialValues: {
-    //         name: "",
-    //         address: "",
-    //         description: "",
-    //         price: "",
-    //         numberOfBedRoom: "",
-    //         numberOfBathRoom: "",
-    //         rooms: [
-    //             {
-    //                 name: "",
-    //                 typeId: ""
-    //             }],
-    //         image: ""
-    //     }, onSubmit: async (values) => {
-    //         const formdata = new FormData();
-    //         formdata.append("name", values.name)
-    //         formdata.append("address", values.address)
-    //         formdata.append("description", values.description)
-    //         formdata.append("price", values.price)
-    //         formdata.append("numberOfBedRoom", values.numberOfBedRoom)
-    //         formdata.append("numberOfBathRoom", values.numberOfBathRoom)
-    //         formdata.append("rooms.name", values.rooms.name)
-    //         formdata.append("rooms.typeId", values.rooms.typeId)
-    //         formdata.append("rooms.image", values.image)
-    //         axios.post("http://localhost:8080/api/house/create", formdata
-    //         ).then(res => {
-    //             console.log(res)
-    //             navigate("/")
-    //         })
-    //     }
-    // })
-
-
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setImage(file);
-        }
-    };
-
-
     return (
         <div>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
                     <div className="navbar">
-                        <a className="navbar-brand" href="/home">Agoda</a>
-                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                            <span className="navbar-toggler-icon"/>
+                        <a className="navbar-brand" href="/home">Agola</a>
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon" />
                         </button>
                         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                             <div className="navbar-nav">
@@ -132,121 +98,78 @@ function Create() {
                     </div>
                 </div>
             </nav>
-            <div className="container w-50" style={{alignContent: "center"}}>
-                <form className="row g-3" onSubmit={createHouse}>
+            <div className="container w-50" style={{ alignContent: "center" }}>
+
+                <form className="row g-3" onSubmit={formAdd.handleSubmit}>
+
                     <div className="col-md">
                         <label htmlFor="inputName" className="form-label">Tên nhà</label>
-                        <input type="text" className="form-control" name="name" id="name"
-                               onChange={(e) => setName(e.target.value)}
-                        />
+                        <input type="text" className="form-control" name="name" id="name" onChange={formAdd.handleChange} />
                     </div>
                     <div className="col-12">
                         <label htmlFor="address" className="form-label">Địa chỉ</label>
-                        <input type="text" className="form-control" id="address" name="address"
-                               onChange={(e) => setAddress(e.target.value)}
-                               placeholder="1234 Main St"/>
+                        <input type="text" className="form-control" id="address" name="address" onChange={formAdd.handleChange} placeholder="1234 Main St" />
                     </div>
                     <div class="input-group">
                         <span class="input-group-text">Số phòng</span>
-                        <input type="number" aria-label="numberOfBedRoom" class="form-control"
-                               onChange={(e) => setNumberOfBedroom(e.target.value)}
-                               placeholder="Phòng ngủ"/>
-                        <input type="number" aria-label="numberOfBathRoom" class="form-control"
-                               onChange={(e) => setNumberOfBathRoom(e.target.value)}
-                               placeholder="Phòng tắm"/>
+                        <input type="number" aria-label="numberOfBedRoom" id="numberOfBedRoom" name="numberOfBedRoom" class="form-control" onChange={formAdd.handleChange} placeholder="Phòng ngủ" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Số phòng</span>
+
+                        <input type="number" aria-label="numberOfBathRoom" id="numberOfBathRoom" name="numberOfBathRoom" class="form-control" onChange={formAdd.handleChange} placeholder="Phòng tắm" />
                     </div>
                     <div class="mb-3">
                         <label for="formFileMultiple" class="form-label">Thêm ảnh</label>
-                        <input class="form-control" name="image" type="file" id="formFileMultiple" multiple
-                               onChange={handleFileChange}
-                        />
+                        <input class="form-control" name="image" onChange={handleImageChange} type="file" id="formFileMultiple" multiple />
                     </div>
                     <div className="input-group mb-3">
                         <span className="input-group-text">Giá</span>
-                        <input type="text" className="form-control" id="price" name="price"
-                               onChange={(e) => setPrice(e.target.value)}
-                               aria-label="Amount (to the nearest dollar)"/>
+                        <input type="text" className="form-control" id="price" name="price" onChange={formAdd.handleChange} aria-label="Amount (to the nearest dollar)" />
                         <span className="input-group-text">.00</span>
                     </div>
                     <div class="form-floating">
-                    <textarea class="form-control" placeholder="Leave a comment here" name="description"
-                              id="description"
-                              onChange={(e) => setDescription(e.target.value)}
-                              style={{height: "100px"}}></textarea>
+                        <textarea class="form-control" placeholder="Leave a comment here" name="description" id="description" onChange={formAdd.handleChange} style={{ height: "100px" }}></textarea>
                         <label for="floatingTextarea2">Mô tả</label>
                     </div>
-                    <div className="col-md">
-                        <div className="form-floating">
-                            <input type="text" className="form-control" id="roomDto" placeholder="Tên phòng"
-                                   onChange={(e) => setNameRoom(e.target.value)}
-                            />
-                            <label htmlFor="roomDto">Tên phòng</label>
-                        </div>
-                    </div>
-                    <div className="col-md">
-                        <div className="form-floating">
-                            <select className="form-select" name="roomDto.typeId" id="roomDto.typeID"
-                                    onChange={(e) => setTypeRoom(e.target.value)}
-                            >
-                                <option selected>Loại phòng</option>
-                                {
-                                    typeRooms.map(typeRoom => (
-                                        <option key={typeRoom.id} value={typeRoom.id}>
-                                            {typeRoom.name}
-                                        </option>
-                                    ))
-                                }
-                            </select>
-                            <label htmlFor="floatingSelectGrid">Chọn loại phòng</label>
-                        </div>
-                    </div>
                     <div>
-                        <button style={{float: "right"}} type="button" class="btn btn-primary col-2"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
+                        <button style={{ float: "right" }} type="button" class="btn btn-primary col-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             Thêm phòng
                         </button>
                     </div>
 
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm phòng</h1>
-
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                {/*<div className="    row g-2">*/}
-                                {/*    <div className="col-md">*/}
-                                {/*        <div className="form-floating">*/}
-                                {/*            <input type="text" className="form-control" id="roomDto" placeholder="Tên phòng"*/}
-                                {/*                   onChange={formAdd.handleChange}/>*/}
-                                {/*            <label htmlFor="roomDto">Tên phòng</label>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*    <div className="col-md">*/}{/*        <div className="form-floating">*/}
-                                {/*            <select className="form-select" name="roomDto.typeId" id="roomDto.typeID"*/}
-                                {/*                    onChange={formAdd.handleChange}>*/}
-                                {/*                <option selected>Loại phòng</option>*/}
-                                {/*                {*/}
-                                {/*                    typeRooms.map(typeRoom => (*/}
-                                {/*                        <option key={typeRoom.id} value={typeRoom.id}>*/}
-                                {/*                            {typeRoom.name}*/}
-                                {/*                        </option>*/}
-                                {/*                    ))*/}
-                                {/*                }*/}
-                                {/*            </select>*/}
-                                {/*            <label htmlFor="floatingSelectGrid">Chọn loại phòng</label>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
+                                <div className="    row g-2">
+                                    <div className="col-md">
+                                        <div className="form-floating">
+                                            <input type="text" className="form-control" name="rooms[0].name" id="room.name" placeholder="Tên phòng" onChange={formAdd.handleChange} />
+                                            <label htmlFor="room.name">Tên phòng</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md">
+                                        <div className="form-floating">
+                                            <select className="form-select" name="rooms[0].typeId" id="rooms.typeId" onChange={formAdd.handleChange}>
+                                                <option selected>Loại phòng</option>
+                                                {
+                                                    typeRooms.map(typeRoom => (
+                                                        <option key={typeRoom.id} value={typeRoom.id}>
+                                                            {typeRoom.name}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                            <label htmlFor="floatingSelectGrid">Chọn loại phòng</label>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="modal-footer">
-
-                                    <button type="submit" className="btn btn-secondary" data-bs-dismiss="modal">Đóng
-                                    </button>
-                                    <button type="button" className="btn btn-primary">Thêm</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                 </div>
                             </div>
                         </div>
@@ -256,10 +179,8 @@ function Create() {
                     </div>
                 </form>
             </div>
-
         </div>
     )
-
 }
 
 
