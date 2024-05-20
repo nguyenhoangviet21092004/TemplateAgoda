@@ -103,7 +103,7 @@ export default function Home() {
                             <img src={process.env.PUBLIC_URL + '/img/' + (house.images[0]?.nameImage || '')} alt="..." />
                         </div>
                         <div className="col-md-8">
-                            <Link to={"/detail"} style={{ textDecoration: "none", color: "black" }}>
+                            <Link to={`/detail/${house.id}`} style={{ textDecoration: "none", color: "black" }}>
                                 <div className="card-body">
                                     <h5 className="card-title">{house.name}</h5>
                                     <p className="card-text">{house.price}(vnd)</p>
