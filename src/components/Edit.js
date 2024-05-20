@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {useFormik} from "formik";
 
@@ -19,6 +19,7 @@ function Edit() {
                 console.error("Error fetching type rooms:", error);
             }
         }
+
         getTypeRooms();
     }, []);
 
@@ -48,6 +49,7 @@ function Edit() {
                 console.error("Error fetching existing data:", error);
             }
         }
+
         getExistingData();
     }, [params.id]);
 
@@ -61,7 +63,7 @@ function Edit() {
             numberOfBedRoom: "",
             numberOfBathRoom: "",
             accountId: "3", // Set default accountId or handle dynamically
-            rooms: [{ name: "", typeId: "" }],
+            rooms: [{name: "", typeId: ""}],
         },
         onSubmit: async (values) => {
             try {
@@ -85,7 +87,7 @@ function Edit() {
                     `http://localhost:8080/api/house/${params.id}`,
                     formData,
                     {
-                        headers: { "Content-Type": "multipart/form-data" },
+                        headers: {"Content-Type": "multipart/form-data"},
                     }
                 );
 
@@ -103,6 +105,11 @@ function Edit() {
         setImage(file);
     }
 
+    const [rooms, setRooms] = useState([{name: '', typeId: ''}]);
+    const handleAddRoom = () => {
+        setRooms([...rooms, {name: '', typeId: ''}]);
+    };
+
     return (
         <div>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -118,16 +125,14 @@ function Edit() {
                             <div className="navbar-nav">
                                 <ul className="nav nav-underline">
                                     <li className="nav-item">
-                                        <a className="nav-link" aria-current="page" href="/home">Trang chủ</a>
+                                        <a className="nav-link" aria-current="page" href="/home"
+                                           style={{color: "black"}}>Trang chủ</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link" href="#">Link</a>
+                                        <a className="nav-link" href="#">On going</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link" href="#">Link</a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link disabled" aria-disabled="true">Disabled</a>
+                                        <a className="nav-link" href="#">On going</a>
                                     </li>
                                 </ul>
                             </div>
@@ -136,6 +141,11 @@ function Edit() {
                 </div>
             </nav>
             <div className="container w-50" style={{alignContent: "center"}}>
+                <div style={{textAlign: "center"}}>
+                    <h1>
+                        Sửa thông tin nhà đang cho thuê
+                    </h1>
+                </div>
                 <form className="row g-3" onSubmit={formEdit.handleSubmit}>
                     <div className="col-md">
                         <label htmlFor="inputName" className="form-label">Tên nhà</label>
@@ -150,7 +160,7 @@ function Edit() {
                                onChange={formEdit.handleChange} placeholder="1234 Main St"/>
                     </div>
                     <div className="input-group">
-                        <span className="input-group-text">Số phòng</span>
+                        <span className="input-group-text">Số phòng ngủ</span>
                         <input type="number" aria-label="numberOfBedRoom" id="numberOfBedRoom" name="numberOfBedRoom"
                                className="form-control" onChange={formEdit.handleChange}
                                value={formEdit.values.numberOfBedRoom}
@@ -158,7 +168,7 @@ function Edit() {
 
                     </div>
                     <div className="input-group">
-                        <span className="input-group-text">Số phòng</span>
+                        <span className="input-group-text">Số phòng tắm</span>
 
                         <input type="number" aria-label="numberOfBathRoom" id="numberOfBathRoom" name="numberOfBathRoom"
                                className="form-control" onChange={formEdit.handleChange}
@@ -177,6 +187,44 @@ function Edit() {
                                onChange={formEdit.handleChange} aria-label="Amount (to the nearest dollar)"/>
                         <span className="input-group-text">.00</span>
                     </div>
+                    {formEdit.values.rooms.map((room, index) => (
+
+                        <div key={index} className="row g-2">
+                            <div className="col-md">
+                                <div className="form-floating">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={room.name}
+                                        name={`rooms[${index}].name`}
+                                        id={`room.name-${index}`}
+                                        placeholder="Tên phòng"
+                                        onChange={formEdit.handleChange}
+                                    />
+                                    <label htmlFor={`room.name-${index}`}>Tên phòng</label>
+                                </div>
+                            </div>
+                            <div className="col-md">
+                                <div className="form-floating">
+                                    <select
+                                        className="form-select"
+                                        name={`rooms[${index}].typeId`}
+                                        value={room.typeId}
+                                        id={`rooms.typeId-${index}`}
+                                        onChange={formEdit.handleChange}
+                                    >
+                                        <option selected>Loại phòng</option>
+                                        {typeRooms.map((typeRoom) => (
+                                            <option key={typeRoom.id} value={typeRoom.id}>
+                                                {typeRoom.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label htmlFor={`rooms.typeId-${index}`}>Chọn loại phòng</label>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                     <div className="form-floating">
                         <textarea className="form-control" placeholder="Leave a comment here" name="description"
                                   id="description" onChange={formEdit.handleChange}
@@ -184,59 +232,13 @@ function Edit() {
                                   style={{height: "100px"}}></textarea>
                         <label for="floatingTextarea2">Mô tả</label>
                     </div>
-                    <div>
-                        <button style={{float: "right"}} type="button" className="btn btn-primary col-2"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Sửa phòng
-                        </button>
-                    </div>
-                    <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h1 className="modal-title fs-5" id="exampleModalLabel">Sửa phòng</h1>
-                                    <button type="button" className="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                </div>
-                                {formEdit.values.rooms.map((room, index) => (
-                                <div className="row g-2">
-                                    <div className="col-md">
-                                        <div className="form-floating">
-                                            <input type="text" className="form-control" name="rooms[0].name"
-                                                   id="room.name" placeholder="Tên phòng"
-                                                   value={room.name}
-                                                   onChange={formEdit.handleChange}/>
-                                            <label htmlFor="room.name">Tên phòng</label>
-                                        </div>
-                                    </div>
-                                    <div className="col-md">
-                                        <div className="form-floating">
-                                            <select className="form-select" name="rooms[0].typeId" id="rooms.typeId"
-                                                    value={room.typeId}
-                                                    onChange={formEdit.handleChange}>
-                                                <option selected>Loại phòng</option>
-                                                {
-                                                    typeRooms.map(typeRoom => (
-                                                        <option key={typeRoom.id} value={typeRoom.id}>
-                                                            {typeRoom.name}
-                                                        </option>
-                                                    ))
-                                                }
-                                            </select>
-                                            <label htmlFor="floatingSelectGrid">Chọn loại phòng</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                    ))}
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Đóng
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     <div className="col-12">
+                        <Link to={"/host"}>
+                            <button className="btn btn-outline-secondary"
+                                    style={{color: "black", marginRight: "1%"}}>Hủy
+                            </button>
+                        </Link>
                         <button type="submit" className="btn btn-outline-primary">Sửa nhà</button>
                     </div>
                 </form>
