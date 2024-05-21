@@ -1,50 +1,56 @@
 import axios from "axios";
 import { Button } from "bootstrap";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Home() {
-        const [houses, setHouses] = useState([]);
-        const [search, setSearch] = useState('');
+    const [houses, setHouses] = useState([]);
+    const [search, setSearch] = useState('');
+    const userName = sessionStorage.getItem('userName');
+    const password = sessionStorage.getItem('password');
+    const roles = sessionStorage.getItem('roles');
+    const checkRole = useState('')
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPage, setItemsPage] = useState(5);
+    const totalPages = Math.ceil(houses.length / itemsPage);
 
-        const [currentPage, setCurrentPage] = useState(1);
-        const [itemsPage, setItemsPage] = useState(5);
-        const totalPages = Math.ceil(houses.length / itemsPage);
+    const getCurrentPageData = () => {
+        const startIndex = (currentPage - 1) * itemsPage;
+        const endIndex = startIndex + itemsPage;
+        return houses.slice(startIndex, endIndex);
+    };
+    const currentPageData = getCurrentPageData();
 
-        const getCurrentPageData = () => {
-            const startIndex = (currentPage - 1) * itemsPage;
-            const endIndex = startIndex + itemsPage;
-            return houses.slice(startIndex, endIndex);
-        };
-        const currentPageData = getCurrentPageData();
+    const renderPageItems = () => {
+        const pageItems = [];
+        for (let i = 1; i <= totalPages; i++) {
+            const isActive = i === currentPage ? 'active' : '';
 
-        const renderPageItems = () => {
-            const pageItems = [];
-            for (let i = 1; i <= totalPages; i++) {
-                const isActive = i === currentPage ? 'active' : '';
+            pageItems.push(
+                <li className={`page-item ${isActive}`} key={i}>
+                    <a className="page-link" onClick={() => currentPage + 1}>{i}</a>
+                </li>
+            );
+        }
+        return pageItems;
+    };
 
-                pageItems.push(
-                    <li className={`page-item ${isActive}`} key={i}>
-                        <a className="page-link" onClick={() => currentPage + 1}>{i}</a>
-                    </li>
-                );
-            }
-            return pageItems;
-        };
+    async function getList() {
+        const response = await axios.get(`http://localhost:8080/api/house?name=${search}`);
+        // console.log(response.data)
+        setHouses(response.data);
 
-        async function getList() {
-            const response = await axios.get(`http://localhost:8080/api/house?name=${search}`);
-            // console.log(response.data)
-            setHouses(response.data)
+        if(roles === 'all') {
+            checkRole = null;
+        }
 
-        };
-
-        useEffect(() => {
-            getList()
-        }, [search])
+    }
+    useEffect(() => {
+        getList()
+    }, [search])
 
 
-        return (
+    return (
         <div>
             <header>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -65,15 +71,20 @@ export default function Home() {
                                     <p style={{ marginTop: '0.40em' }}>|</p>
                                     <a className="nav-link" href="#">Sign in</a>
                                     <div className="dropdown">
-                                        <div className="btn-group dropstart">
-                                            <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Chức năng
-                                            </button>
-                                            <ul className="dropdown-menu">
-                                                <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
-                                                <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
-                                            </ul>
-                                        </div>
+                                        {roles === 'admin' || roles === 'host'? (
+                                            <div className="btn-group dropstart">
+                                                <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Chức năng
+                                                </button>
+                                                <ul className="dropdown-menu">
+                                                    <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
+                                                    <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                                </ul>
+                                            </div>
+                                        ) : (
+                                            <p>User</p>
+                                        )}
+
                                     </div>
                                 </div>
                             </div>
@@ -85,9 +96,9 @@ export default function Home() {
                 <div className="container">
                     <form className="form-inline d-flex" >
                         <input className="form-control my-sm-0" style={{ width: "1198px" }} type="search"
-                               value={search}
-                               onChange={(e) => setSearch(e.target.value)}
-                               placeholder="Tìm nhà cho thuê" aria-label="Search" />
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Tìm nhà cho thuê" aria-label="Search" />
                         <button className="btn btn-danger  my-2 my-sm-0" type="submit">Tìm kiếm</button>
                     </form>
                 </div>
@@ -97,28 +108,28 @@ export default function Home() {
                 <h2>Danh sách các nhà đang cho thuê</h2>
                 {currentPageData.map(house => <div className="container">
 
-                <div className="card mb-3" style={{ maxWidth: '100%' }}>
-                    <div className="row g-0">
-                        <div className="col-md-4">
-                            <img src={process.env.PUBLIC_URL + '/img/' + (house.images[0]?.nameImage || '')} alt="..." />
-                        </div>
-                        <div className="col-md-8">
-                            <Link to={`/detail/${house.id}`} style={{ textDecoration: "none", color: "black" }}>
-                                <div className="card-body">
-                                    <h5 className="card-title">{house.name}</h5>
-                                    <p className="card-text">{house.price}(vnd)</p>
-                                    <p className="card-text"><small className="text-body-secondary">{house.description}</small></p>
-                                </div>
-                            </Link>
-                        </div>
-                        <div className="card-footer text-body-secondary" style={{ display: "flex" }}>
-                            <a href="/hostInfo" style={{ textDecoration: "none", color: "black" }}>{house.account.name}</a>
-                            <p className="btn btn-outline-info" style={{ marginLeft: "79%", color: "black" }}>{house.status.name}</p>
-                        </div>
+                    <div className="card mb-3" style={{ maxWidth: '100%' }}>
+                        <div className="row g-0">
+                            <div className="col-md-4">
+                                <img src={process.env.PUBLIC_URL + '/img/' + (house.images[0]?.nameImage || '')} alt="..." />
+                            </div>
+                            <div className="col-md-8">
+                                <Link to={`/detail/${house.id}`} style={{ textDecoration: "none", color: "black" }}>
+                                    <div className="card-body">
+                                        <h5 className="card-title">{house.name}</h5>
+                                        <p className="card-text">{house.price}(vnd)</p>
+                                        <p className="card-text"><small className="text-body-secondary">{house.description}</small></p>
+                                    </div>
+                                </Link>
+                            </div>
+                            <div className="card-footer text-body-secondary" style={{ display: "flex" }}>
+                                <a href="/hostInfo" style={{ textDecoration: "none", color: "black" }}>{house.account.name}</a>
+                                <p className="btn btn-outline-info" style={{ marginLeft: "79%", color: "black" }}>{house.status.name}</p>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
-            </div>
                 )}
             </div>
 
@@ -141,5 +152,5 @@ export default function Home() {
             </footer>
         </div>
 
-        )
+    )
 }
