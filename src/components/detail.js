@@ -53,9 +53,16 @@ function Detail() {
                     <div>
                         <div className="container">
                             <article class="article">
-                                <div class="article-img">
+                                {/* <div class="article-img">
                                     <img src="https://tienganhikun.com/upload/images/house_ikun.jpg" title="" alt="" />
-                                </div>
+                                </div> */}
+
+{
+                        house.images?.map(item =><div className="col-md-4">
+                        <img src={process.env.PUBLIC_URL + '/img/' + (item.nameImage)}
+                             className="img-fluid rounded-start" alt="..."/>
+                    </div> )
+                      } 
                                 <div class="article-title">
                                     <h2>{house.name}</h2>
                                 </div>
