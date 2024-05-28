@@ -30,6 +30,63 @@ function Detail() {
         window.open(googleMapsUrl, '_blank');
     };
 
+
+    const [range, setRange] = useState([{
+        startDate: new Date(),
+        endDate: addDays(new Date(), 7),
+        key: 'selection'
+    }]);
+
+    const [open, setOpen] = useState(false)
+
+    const refOne = useRef(null);
+
+    useEffect(() => {
+        document.addEventListener("keydown", hideOnEscape, true)
+        document.addEventListener("click", hideOnClickOutside, true)
+
+    }, []);
+
+    const hideOnEscape = (e) => {
+        console.log(e.key)
+        if (e.key === "Escape") {
+            setOpen(false)
+        }
+    }
+
+    const hideOnClickOutside = (e) => {
+        if (refOne.current && !refOne.current.contains(e.target)) {
+            setOpen(false)
+        }
+    }
+
+    const [dateRange, setDateRange] = useState(`${format(range[0].startDate, "yyyy-MM-dd")} -- ${format(range[0].endDate, "yyyy-MM-dd")}`);
+    //
+    //  const [totalDay, setTotalDay] = useState(0)
+    //  const start = new Date(`${format(range[0].startDate, "yyyy-MM-dd")}`);
+    //  const end = new Date(`${format(range[0].endDate, "yyyy-MM-dd")}`);
+    //  const  days = differenceInDays(end, start)
+    //  setTotalDay(days)
+    //
+    // console.log(totalDay)
+
+    const handleDateRangeChange = (e) => {
+        setDateRange(e.target.value);
+    };
+    async function BookHouse() {
+        const response = await axios.post('http://localhost:8080/api/order', {
+            date: dateRange,
+            idAccount: '3',
+            idHouse : '1'
+        })
+
+        // if (response.data) {
+        //     history('/');
+        // }
+    }
+
+
+
     return (
         <div>
             <header>
@@ -102,16 +159,41 @@ function Detail() {
                                             <h2>{house.address}</h2>
                                         </div>
 
-                                        <h2>Giá:  {formattedNumber}(VND)</h2>
+                                        <h2>Giá: {formattedNumber}(VND)</h2>
                                         <div className="article-content">
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                <h5 style={{ marginRight: '8px' }}>Địa chỉ: {house.name}</h5>
-                                                <a style={{ marginBottom: '13px', marginLeft: '13px' }}
-                                                    onClick={handleViewDirections}>Xem chỉ dẫn</a>
+                                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                                <h5 style={{marginRight: '8px'}}>Địa chỉ: {house.name}</h5>
+                                                <a style={{marginBottom: '13px', marginLeft: '13px'}}
+                                                   onClick={handleViewDirections}>Xem chỉ dẫn</a>
                                             </div>
                                             <h5>Số phòng ngủ: {house.numberOfBedRoom}</h5>
                                             <h5>Số phòng tắm: {house.numberOfBathRoom}</h5>
                                         </div>
+                                        <form onSubmit={BookHouse}>
+                                            <div className="calendarWrap">
+                                                <input
+                                                    value={`${format(range[0].startDate, "yyyy-MM-dd")} -- ${format(range[0].endDate, "yyyy-MM-dd")}`}
+                                                    readOnly
+                                                    className="inputBox"
+                                                    onChange={handleDateRangeChange}
+                                                    onClick={() => setOpen(open => !open)}
+                                                />
+                                                <div ref={refOne}>
+                                                    {open &&
+                                                        <DateRangePicker
+                                                            onChange={item => setRange([item.selection])}
+                                                            editableDateInputs={true}
+                                                            moveRangeOnFirstSelection={false}
+                                                            ranges={range}
+                                                            months={2}
+                                                            direction="horizontal"
+                                                            className="calendarElement"
+                                                        />
+                                                    }
+                                                </div>
+                                            </div>
+                                            <input type="submit" value="submit"/>
+                                        </form>
                                     </div>
                                     <div className="test2">
                                         <form>
@@ -122,11 +204,11 @@ function Detail() {
                                                             <h4 class="mb-4">Đặt thuê nhà</h4>
                                                             <div class="form-group">
                                                                 <label for="startDate"><b>Chọn ngày bắt đầu:</b></label>
-                                                                <input type="date" class="form-control" id="startDate" />
+                                                                <input type="date" class="form-control" id="startDate"/>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="endDate"><b>Chọn ngày kết thúc:</b></label>
-                                                                <input type="date" class="form-control" id="endDate" />
+                                                                <input type="date" class="form-control" id="endDate"/>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label><b>Số ngày thuê:</b></label>
