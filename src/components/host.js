@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
 import {useEffect, useState} from "react";
+import Footer from "./Footer";
 function HostList() {
     const [houses, setHouses] = useState([]);
     // const [search, setSearch] = useState('');
@@ -8,7 +9,7 @@ function HostList() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPage, setItemsPage] = useState(10);
     const totalPages = Math.ceil(houses.length / itemsPage);
-
+  
     const getCurrentPageData = () => {
         const startIndex = (currentPage - 1) * itemsPage;
         const endIndex = startIndex + itemsPage;
@@ -16,6 +17,7 @@ function HostList() {
     };
     const currentPageData = getCurrentPageData();
 
+    
     const renderPageItems = () => {
         const pageItems = [];
         for (let i = 1; i <= totalPages; i++) {
@@ -114,6 +116,9 @@ function HostList() {
 
                     </ul>
                 </nav>
+            </div>
+            <div style={{marginTop:"8.3%"}}> 
+                <Footer/>
             </div>
         </div>
     )

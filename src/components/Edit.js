@@ -2,6 +2,7 @@ import axios from "axios";
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {useFormik} from "formik";
+import Footer from "./Footer";
 
 function Edit() {
     const navigate = useNavigate();
@@ -242,6 +243,9 @@ function Edit() {
                         <button type="submit" className="btn btn-outline-primary">Sửa nhà</button>
                     </div>
                 </form>
+            </div>
+            <div>
+                <Footer/>
             </div>
         </div>
     )

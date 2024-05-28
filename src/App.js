@@ -4,10 +4,10 @@ import { Route, Router, Routes } from "react-router-dom"
 import Home from './components/home';
 import Create from './components/Create';
 import Edit from './components/Edit';
-import ViewHouse from "./components/ViewHouse";
 import Detail from "./components/detail";
 import HostList from "./components/host";
 import Login from './components/Login';
+import History from './components/History';
 
 function App() {
     return (
@@ -18,7 +18,8 @@ function App() {
                 <Route path='/edit/:id' element={<Edit />}></Route>
                 <Route path='/detail/:id' element={<Detail />}></Route>
                 <Route path='/host' element={< HostList />}></Route>
-                <Route path='' element={< Login />}></Route>
+                <Route path='/' element={< Login />}></Route>
+                <Route path='/history/:id' element={<History />}></Route>
             </Routes>
         </>
     );

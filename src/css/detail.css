@@ -1,4 +1,4 @@
-body{margin-top:20px;}
+
 .blog-listing {
     padding-top: 30px;
     padding-bottom: 30px;
@@ -271,4 +271,21 @@ img {
 img {
     vertical-align: middle;
     border-style: none;
+}
+.test{
+display: flex;
+}
+.test1{
+  width: 65%;
+}
+.test2{
+  width: 45%;
+  margin-top: 2%;
+  margin-left: 10%;
+}
+.text-center{
+  background-color:white;
+}
+.row{
+  margin-top:1% ;
 }
