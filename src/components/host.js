@@ -1,15 +1,17 @@
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import Footer from "./Footer";
+
 function HostList() {
     const [houses, setHouses] = useState([]);
     // const [search, setSearch] = useState('');
+    const idAccount = sessionStorage.getItem('account_id');
 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPage, setItemsPage] = useState(10);
     const totalPages = Math.ceil(houses.length / itemsPage);
-  
+
     const getCurrentPageData = () => {
         const startIndex = (currentPage - 1) * itemsPage;
         const endIndex = startIndex + itemsPage;
@@ -17,7 +19,7 @@ function HostList() {
     };
     const currentPageData = getCurrentPageData();
 
-    
+
     const renderPageItems = () => {
         const pageItems = [];
         for (let i = 1; i <= totalPages; i++) {
@@ -31,11 +33,11 @@ function HostList() {
         }
         return pageItems;
     };
+
     async function getList() {
         const response = await axios.get(`http://localhost:8080/api/house`);
-        // console.log(response.data)
         setHouses(response.data)
-
+        console.log(idAccount)
     };
 
     useEffect(() => {
@@ -84,20 +86,25 @@ function HostList() {
                     </tr>
                     </thead>
                     <tbody>
-                    {currentPageData.map(house =>
-                        <tr>
-                            <th scope="row">{house.id}</th>
-                            <td><a href={`detail/${house.id}`} style={{textDecoration: "none", color: "black"}}>{house.name}</a>
-                            </td>
-                            <td>{house.address}</td>
-                            <td>{house.price} VNĐ/Ngày</td>
-                            <td>
-                                    <a href={`edit/${house.id}`} type="button" className="btn btn-secondary"
-                                            style={{marginRight: "2%"}}>Sửa nhà
-                                    </a>
-                                <button type="button" className="btn btn-danger">Xóa nhà</button>
-                            </td>
-                        </tr>
+                    {currentPageData.reverse().map(house =>
+                            house.account.id === parseInt(idAccount) && (
+                                <tr>
+                                    <th scope="row">{house.id}</th>
+                                    <td>
+                                        <a href={`detail/${house.id}`} style={{ textDecoration: "none", color: "black" }}>
+                                            {house.name}
+                                        </a>
+                                    </td>
+                                    <td>{house.address}</td>
+                                    <td>{house.price} VNĐ/Ngày</td>
+                                    <td>
+                                        <a href={`edit/${house.id}`} type="button" className="btn btn-secondary" style={{ marginRight: "2%" }}>
+                                            Sửa nhà
+                                        </a>
+                                        <button type="button" className="btn btn-danger">Xóa nhà</button>
+                                    </td>
+                                </tr>
+                            )
                     )}
                     </tbody>
                 </table>
@@ -117,7 +124,7 @@ function HostList() {
                     </ul>
                 </nav>
             </div>
-            <div style={{marginTop:"8.3%"}}> 
+            <div style={{marginTop: "8.3%"}}>
                 <Footer/>
             </div>
         </div>

@@ -15,32 +15,32 @@ import {
 
 function Login() {
 
-    const [userName, setUserName] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const value = {
         data: {
-            userName: userName,
+            username: username,
             password: password
         }
     };
     async function Login(e) {
-
         e.preventDefault();
         const reponse = await axios.post('http://localhost:8080/api/account/login', {
-            userName: userName,
+            username: username,
             password: password
         })
 
-        sessionStorage.setItem('userName', userName);
+        sessionStorage.setItem('username', username);
         sessionStorage.setItem('password', password);
-        sessionStorage.setItem('roles', reponse.data.roles);
+        sessionStorage.setItem('account_id',reponse.data.id);
+        sessionStorage.setItem('role', reponse.data.role);
 
 
-
-
-        if (reponse.data) {
+        if (reponse.data.role === 'user') {
             navigate('/home')
+        }else {
+            navigate('/host')
         }
 
     }
@@ -58,7 +58,7 @@ function Login() {
                 <MDBCol col='4' md='5'>
 
                     <form onSubmit={Login}>
-                    <MDBInput wrapperClass='mb-4' label='User Name' id='formControlLg' onChange={(e) => setUserName(e.target.value)} type='text' size="lg"/>
+                    <MDBInput wrapperClass='mb-4' label='User Name' id='formControlLg' onChange={(e) => setUsername(e.target.value)} type='text' size="lg"/>
                     <MDBInput wrapperClass='mb-4' label='Password' id='formControlLg' onChange={(e) => setPassword(e.target.value)} type='password' size="lg"/>
 
 
