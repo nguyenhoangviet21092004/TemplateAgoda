@@ -104,7 +104,7 @@ export default function Home() {
                                             </div>
                                         ) : (
                                             <div>
-                                                <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                <button type="button" className="btn btn-secondary dropdown-toggle"
                                                         data-bs-toggle="dropdown" aria-expanded="false">
                                                     {username}
                                                 </button>
@@ -123,33 +123,67 @@ export default function Home() {
                 </nav>
 
             </header>
-            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
+            <div id="carouselExampleSlidesOnly" className="carousel slide" data-bs-ride="carousel">
+                <div className="carousel-inner">
+                    <div className="carousel-item active">
                         <img
                             src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/b6e874107714719.5fad336f21e5b.png"
-                            class="d-block w-100" alt="..."/>
+                            className="d-block w-100" alt="..."/>
                     </div>
-                    <div class="carousel-item">
+                    <div className="carousel-item">
                         <img
                             src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/945451107714719.5fad336f20b9c.png"
-                            class="d-block w-100" alt="..."/>
+                            className="d-block w-100" alt="..."/>
                     </div>
-                    <div class="carousel-item">
+                    <div className="carousel-item">
                         <img
                             src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/873875107714719.5fad336f1fe85.png"
-                            class="d-block w-100" alt="..."/>
+                            className="d-block w-100" alt="..."/>
                     </div>
                 </div>
             </div>
-            <div className="search" style={{marginBottom: "10em", marginTop: "2em"}}>
+
+            <div className="search" style={{marginBottom: "5em", marginTop: "2em"}}>
                 <div className="container">
                     <form className="form-inline d-flex">
-                        <input className="form-control my-sm-0" style={{width: "1198px"}} type="search"
-                               value={search}
-                               onChange={(e) => setSearch(e.target.value)}
-                               placeholder="Tìm nhà cho thuê" aria-label="Search"/>
-                        <button className="btn btn-danger  my-2 my-sm-0" type="submit">Tìm kiếm</button>
+
+                        <input className="form-control my-sm-0"
+                               style={{width: "400px", borderRadius: '20px', marginRight: "1%", borderColor: 'black'}}
+                               type="search" placeholder="Tìm nhà cho thuê" aria-label="Search"/>
+                        <select className="form-select" aria-label="Default select example"
+                                style={{width: "160px", marginRight: '0.5%', borderColor: 'black'}}>
+                            <option selected>Số phòng ngủ</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                        <select className="form-select" aria-label="Default select example"
+                                style={{width: "160px", borderColor: 'black'}}>
+                            <option selected>Số phòng tắm</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                        <select className="form-select" aria-label="Default select example"
+                                style={{width: "160px", marginLeft: '0.5%', borderColor: 'black'}}>
+                            <option selected>Giá</option>
+                            <option value="1">1 - 3 triệu</option>
+                            <option value="2">2 - 5 triệu</option>
+                            <option value="3">5 - 7 triệu</option>
+                            <option value="4">7 - 9 triệu</option>
+                        </select>
+                        <select className="form-select" aria-label="Default select example"
+                                style={{width: "160px", marginLeft: '0.5%', borderColor: 'black'}}>
+                            <option selected>Trạng thái</option>
+                            <option value="1">Còn trống</option>
+                            <option value="2">Đã cho thuê</option>
+                            <option value="3">Đang nâng cấp</option>
+                        </select>
+                        <div style={{marginLeft: '4%'}}>
+                            <button className="btn btn-danger  my-2 my-sm-0" type="submit" style={{left: "20%"}}>Tìm
+                                kiếm
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
