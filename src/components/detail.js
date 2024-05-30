@@ -1,19 +1,27 @@
 import "../css/detail.css"
-import Footer from "./Footer";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, {useEffect, useState, useRef} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
+import {DateRangePicker} from "react-date-range";
+import format from "date-fns/format"
+import {addDays, differenceInDays} from "date-fns"
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css';
+import Footer from "./Footer"; // theme css file
+
 function Detail() {
 
+    const navigate = useNavigate();
     const [house, setHouse] = useState({});
+    const idAccount = sessionStorage.getItem('account_id');
 
     const a = Number(house.price);
     const formattedNumber = a.toLocaleString();
-    console.log(house.price)
+    // console.log(house.price)
     const params = useParams();
 
     function formatCurrency(amount) {
-        return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
     }
 
     async function getHouse() {
@@ -60,42 +68,46 @@ function Detail() {
         }
     }
 
-    const [dateRange, setDateRange] = useState(`${format(range[0].startDate, "yyyy-MM-dd")} -- ${format(range[0].endDate, "yyyy-MM-dd")}`);
-    //
-    //  const [totalDay, setTotalDay] = useState(0)
-    //  const start = new Date(`${format(range[0].startDate, "yyyy-MM-dd")}`);
-    //  const end = new Date(`${format(range[0].endDate, "yyyy-MM-dd")}`);
-    //  const  days = differenceInDays(end, start)
-    //  setTotalDay(days)
-    //
-    // console.log(totalDay)
 
-    const handleDateRangeChange = (e) => {
-        setDateRange(e.target.value);
-    };
-    async function BookHouse() {
+    async function BookHouse(e) {
+        e.preventDefault();
+
+        const dateStart = new Date(range[0].startDate);
+        const dateEnd = new Date(range[0].endDate);
+        const oneDay = 24 * 60 * 60 * 1000; // Số milliseconds trong một ngày
+        const diffDays = Math.round(Math.abs((dateStart - dateEnd) / oneDay)) + 1;
+        const yearStart = dateStart.getFullYear();
+        const monthStart = dateStart.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
+        const dayStart = dateStart.getDate();
+
+        const yearEnd = dateEnd.getFullYear();
+        const monthEnd = dateEnd.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
+        const dayEnd = dateEnd.getDate();
+
+        const date = `${yearStart}-${monthStart}-${dayStart} -- ${yearEnd}-${monthEnd}-${dayEnd}`;
         const response = await axios.post('http://localhost:8080/api/order', {
-            date: dateRange,
-            idAccount: '3',
-            idHouse : '1'
+            date: date,
+            idHouse: params.id,
+            total: diffDays,
+            idAccount: idAccount,
         })
 
-        // if (response.data) {
-        //     history('/');
-        // }
+       navigate('/home')
     }
-
 
 
     return (
         <div>
             <header>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary" style={{ boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)" }} >
+                <nav className="navbar navbar-expand-lg bg-body-tertiary"
+                     style={{boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)"}}>
                     <div className="container-fluid">
                         <div className="navbar w-100">
-                            <a className="navbar-brand" href="/home">Agola</a>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon" />
+                            <a className="navbar-brand" href="/home">Agoda</a>
+                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                                    aria-expanded="false" aria-label="Toggle navigation">
+                                <span className="navbar-toggler-icon"/>
                             </button>
                             <ul class="nav nav-underline">
                                 <li class="nav-item">
@@ -104,12 +116,13 @@ function Detail() {
 
                             </ul>
                             <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                                <div className="navbar-nav "  >
+                                <div className="navbar-nav ">
 
-                            
+
                                     <div class="dropdown">
                                         <div class="btn-group dropstart">
-                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
                                                 Tên chủ nhà
                                             </button>
                                             <ul class="dropdown-menu">
@@ -127,7 +140,7 @@ function Detail() {
                 </nav>
             </header>
             <div class="blog-single">
-                <div class="container" >
+                <div class="container">
                     <div class="row ">
                         <div class="col-lg-8 m-15px-tb">
                             <article class="article">
@@ -137,18 +150,20 @@ function Detail() {
                                             <div className={`carousel-item ${index === 0 ? 'active' : ''}`}>
                                                 <div>
                                                     <img src={process.env.PUBLIC_URL + '/img/' + (item.nameImage)}
-                                                        class="d-block w-100" alt={`Carousel Image ${index + 1}`} />
+                                                         class="d-block w-100" alt={`Carousel Image ${index + 1}`}/>
                                                 </div>
 
                                             </div>
                                         ))}
                                     </div>
 
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                    <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                         <span class="visually-hidden">Previous</span>
                                     </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                    <button class="carousel-control-next" type="button"
+                                            data-bs-target="#carouselExampleControls" data-bs-slide="next">
                                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                         <span class="visually-hidden">Next</span>
                                     </button>
@@ -173,9 +188,7 @@ function Detail() {
                                             <div className="calendarWrap">
                                                 <input
                                                     value={`${format(range[0].startDate, "yyyy-MM-dd")} -- ${format(range[0].endDate, "yyyy-MM-dd")}`}
-                                                    readOnly
                                                     className="inputBox"
-                                                    onChange={handleDateRangeChange}
                                                     onClick={() => setOpen(open => !open)}
                                                 />
                                                 <div ref={refOne}>
@@ -191,39 +204,16 @@ function Detail() {
                                                         />
                                                     }
                                                 </div>
+                                                {range[0].startDate && range[0].endDate && (
+                                                    <p>
+                                                        Số ngày: {differenceInDays(range[0].endDate, range[0].startDate) + 1}
+                                                    </p>
+                                                )}
                                             </div>
-                                            <input type="submit" value="submit"/>
+                                            <input type="submit" value="Đặt nhà"/>
                                         </form>
                                     </div>
-                                    <div className="test2">
-                                        <form>
-                                            <div class="container">
-                                                <div class="row justify-content-center">
-                                                    <div class="card shadow-sm">
-                                                        <div class="card-body">
-                                                            <h4 class="mb-4">Đặt thuê nhà</h4>
-                                                            <div class="form-group">
-                                                                <label for="startDate"><b>Chọn ngày bắt đầu:</b></label>
-                                                                <input type="date" class="form-control" id="startDate"/>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="endDate"><b>Chọn ngày kết thúc:</b></label>
-                                                                <input type="date" class="form-control" id="endDate"/>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label><b>Số ngày thuê:</b></label>
-                                                                <p class="font-weight-bold" id="rentalDays">0 ngày</p>
-                                                            </div>
-                                                            <div class="text-center">
-                                                                <button type="button" class="btn btn-primary">Thuê nhà</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
 
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
                                 </div>
                             </article>
                             <div class="contact-form article-comment">
@@ -233,10 +223,12 @@ function Detail() {
 
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <textarea name="message" id="message" placeholder="Để lại nhật xét của bạn" rows="4" class="form-control"></textarea>
+                                                <textarea name="message" id="message"
+                                                          placeholder="Để lại nhật xét của bạn" rows="4"
+                                                          class="form-control"></textarea>
                                             </div>
                                         </div>
-                                        <div class="col-md-12" style={{ marginTop: "1%" }}>
+                                        <div class="col-md-12" style={{marginTop: "1%"}}>
                                             <button type="button" class="btn btn-outline-success">Đăng</button>
                                         </div>
                                     </div>
@@ -252,7 +244,8 @@ function Detail() {
                                 <div class="widget-body">
                                     <div class="media align-items-center">
                                         <div class="avatar">
-                                            <img src="https://bootdey.com/img/Content/avatar/avatar6.png" title="" alt="" />
+                                            <img src="https://bootdey.com/img/Content/avatar/avatar6.png" title=""
+                                                 alt=""/>
                                         </div>
                                         <div class="media-body">
                                             <h5>Tên người cho thuê </h5>
@@ -275,4 +268,5 @@ function Detail() {
         </div>
     )
 }
+
 export default Detail;
