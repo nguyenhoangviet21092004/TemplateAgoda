@@ -6,7 +6,6 @@ import Footer from "./Footer";
 
 export default function Home() {
     const [houses, setHouses] = useState([]);
-    const [search, setSearch] = useState('');
     const username = sessionStorage.getItem('username');
     const password = sessionStorage.getItem('password');
     const role = sessionStorage.getItem('role');
@@ -14,8 +13,21 @@ export default function Home() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPage, setItemsPage] = useState(5);
     const totalPages = Math.ceil(houses.length / itemsPage);
-    const [price, setPrice] = useState(0);
 
+
+    const [name, setName] = useState('');
+    const [address, setAddress] = useState('');
+    const [numberOfBedRoom, setNumberOfBedRoom] = useState(0);
+    const [numberOfBathRoom, setNumberOfBathRoom] = useState(0);
+    const [priceFrom, setPriceFrom] = useState(0);
+    const [priceTo, setPriceTo] = useState(0);
+    const [status, setStatus] = useState(0);
+
+    const handleSelectChange = (e) => {
+        const [from, to] = e.target.value.split(' - ');
+        setPriceFrom(parseInt(from));
+        setPriceTo(parseInt(to));
+    };
 
     function formatCurrency(amount) {
         return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
@@ -43,7 +55,8 @@ export default function Home() {
     };
 
     async function getList() {
-        const response = await axios.get(`http://localhost:8080/api/house?name=${search}`);
+        const response =
+            await axios.get(`http://localhost:8080/api/house?name=${name}&address=${address}&numberOfBedRoom=${numberOfBedRoom}&numberOfBathRoom=${numberOfBathRoom}&priceFrom=${priceFrom}&priceTo=${priceTo}&status=${status}`);
         // console.log(response.data)
         setHouses(response.data);
 
@@ -51,7 +64,7 @@ export default function Home() {
 
     useEffect(() => {
         getList()
-    }, [search])
+    }, [name,address,numberOfBedRoom, numberOfBathRoom, priceFrom, priceTo,status])
 
 
     return (
@@ -109,7 +122,7 @@ export default function Home() {
                                                     {username}
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    <li><a href={`/history/3`} class="dropdown-item">Lịch sử đặt</a>
+                                                    <li><a href={`/history/${idAccount}`} class="dropdown-item">Lịch sử đặt</a>
                                                     </li>
                                                     <li><a class="dropdown-item" href="#">Chi tiết tài khoản</a></li>
                                                 </ul>
@@ -149,35 +162,57 @@ export default function Home() {
 
                         <input className="form-control my-sm-0"
                                style={{width: "400px", borderRadius: '20px', marginRight: "1%", borderColor: 'black'}}
-                               type="search" placeholder="Tìm nhà cho thuê" aria-label="Search"/>
+                               type="search"
+                               onChange={(e) => setName(e.target.value)}
+                               placeholder="Tìm tên nhà cho thuê" aria-label="Search"/>
+                        <input className="form-control my-sm-0"
+                               style={{width: "400px", borderRadius: '20px', marginRight: "1%", borderColor: 'black'}}
+                               type="search"
+                               onChange={(e) => setAddress(e.target.value)}
+                               placeholder="Tìm địa chỉ nhà cho thuê" aria-label="Search"/>
                         <select className="form-select" aria-label="Default select example"
+                                onChange={(e) => setNumberOfBedRoom(e.target.value)}
                                 style={{width: "160px", marginRight: '0.5%', borderColor: 'black'}}>
-                            <option selected>Số phòng ngủ</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            <option selected >Số phòng ngủ</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
                         </select>
                         <select className="form-select" aria-label="Default select example"
+                                onChange={(e) => setNumberOfBathRoom(e.target.value)}
                                 style={{width: "160px", borderColor: 'black'}}>
                             <option selected>Số phòng tắm</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                        <select
+                            className="form-select"
+                            aria-label="Default select example"
+                            onChange={handleSelectChange}
+                            style={{width: '160px', marginLeft: '0.5%', borderColor: 'black'}}
+                        >
+                            <option value="">Giá</option>
+                            <option value="0 - 1000000">Dưới 1 triệu</option>
+                            <option value="1000000 - 3000000">1 - 3 triệu</option>
+                            <option value="3000000 - 5000000">3 - 5 triệu</option>
+                            <option value="5000000 - 7000000">5 - 7 triệu</option>
+                            <option value="7000000 - 100000000">Trên 7 triệu </option>
                         </select>
                         <select className="form-select" aria-label="Default select example"
-                                style={{width: "160px", marginLeft: '0.5%', borderColor: 'black'}}>
-                            <option selected>Giá</option>
-                            <option value="1">1 - 3 triệu</option>
-                            <option value="2">2 - 5 triệu</option>
-                            <option value="3">5 - 7 triệu</option>
-                            <option value="4">7 - 9 triệu</option>
-                        </select>
-                        <select className="form-select" aria-label="Default select example"
+                                onChange={(e) => setStatus(e.target.value)}
                                 style={{width: "160px", marginLeft: '0.5%', borderColor: 'black'}}>
                             <option selected>Trạng thái</option>
                             <option value="1">Còn trống</option>
                             <option value="2">Đã cho thuê</option>
-                            <option value="3">Đang nâng cấp</option>
+                            <option value="3">Đang chờ duyệt</option>
                         </select>
                         <div style={{marginLeft: '4%'}}>
                             <button className="btn btn-danger  my-2 my-sm-0" type="submit" style={{left: "20%"}}>Tìm

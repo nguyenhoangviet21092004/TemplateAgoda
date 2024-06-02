@@ -7,18 +7,19 @@ function HostList() {
     const [houses, setHouses] = useState([]);
     // const [search, setSearch] = useState('');
     const idAccount = sessionStorage.getItem('account_id');
+    const filteredData = houses.filter(house => house.account.id === parseInt(idAccount));
 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPage, setItemsPage] = useState(10);
-    const totalPages = Math.ceil(houses.length / itemsPage);
+    const totalPages = Math.ceil(filteredData.length / itemsPage);
 
     const getCurrentPageData = () => {
         const startIndex = (currentPage - 1) * itemsPage;
         const endIndex = startIndex + itemsPage;
-        return houses.slice(startIndex, endIndex);
+        return filteredData.slice(startIndex, endIndex);
     };
-    const currentPageData = getCurrentPageData();
 
+    const currentPageData = getCurrentPageData();
 
     const renderPageItems = () => {
         const pageItems = [];
@@ -86,25 +87,24 @@ function HostList() {
                     </tr>
                     </thead>
                     <tbody>
-                    {currentPageData.reverse().map(house =>
-                            house.account.id === parseInt(idAccount) && (
-                                <tr>
-                                    <th scope="row">{house.id}</th>
-                                    <td>
-                                        <a href={`detail/${house.id}`} style={{ textDecoration: "none", color: "black" }}>
-                                            {house.name}
-                                        </a>
-                                    </td>
-                                    <td>{house.address}</td>
-                                    <td>{house.price} VNĐ/Ngày</td>
-                                    <td>
-                                        <a href={`edit/${house.id}`} type="button" className="btn btn-secondary" style={{ marginRight: "2%" }}>
-                                            Sửa nhà
-                                        </a>
-                                        <button type="button" className="btn btn-danger">Xóa nhà</button>
-                                    </td>
-                                </tr>
-                            )
+                    {currentPageData.map(house =>
+                        <tr>
+                            <th scope="row">{house.id}</th>
+                            <td>
+                                <a href={`detail/${house.id}`} style={{textDecoration: "none", color: "black"}}>
+                                    {house.name}
+                                </a>
+                            </td>
+                            <td>{house.address}</td>
+                            <td>{house.price} VNĐ/Ngày</td>
+                            <td>
+                                <a href={`edit/${house.id}`} type="button" className="btn btn-secondary"
+                                   style={{marginRight: "2%"}}>
+                                    Sửa nhà
+                                </a>
+                                <button type="button" className="btn btn-danger">Xóa nhà</button>
+                            </td>
+                        </tr>
                     )}
                     </tbody>
                 </table>

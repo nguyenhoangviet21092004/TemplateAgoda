@@ -14,6 +14,7 @@ function Detail() {
     const navigate = useNavigate();
     const [house, setHouse] = useState({});
     const idAccount = sessionStorage.getItem('account_id');
+    const price = house.price;
 
     const a = Number(house.price);
     const formattedNumber = a.toLocaleString();
@@ -89,6 +90,7 @@ function Detail() {
             date: date,
             idHouse: params.id,
             total: diffDays,
+            revenue: price * diffDays,
             idAccount: idAccount,
         })
 
@@ -209,6 +211,7 @@ function Detail() {
                                                         Số ngày: {differenceInDays(range[0].endDate, range[0].startDate) + 1}
                                                     </p>
                                                 )}
+                                                <p>Tổng tiền: {(differenceInDays(range[0].endDate, range[0].startDate) + 1)*price}</p>
                                             </div>
                                             <input type="submit" value="Đặt nhà"/>
                                         </form>
