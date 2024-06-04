@@ -34,7 +34,9 @@ function History() {
             getHistory();
         }
     }
-
+    function formatCurrency(amount) {
+        return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+    }
     return (
         <div style={{height: '100vh'}}>
 
@@ -78,16 +80,16 @@ function History() {
                     </tr>
                     </thead>
                     <tbody>
-                    {order.map(item => <tr>
+                    {order.reverse().map(item => <tr>
                         <td scope="row">{item.timeStart} đến {item.timeEnd}</td>
                         <td><Link to="/detail" style={{textDecoration: "none", color: "black"}}>{item.house.name}</Link>
                         </td>
                         <td>{item.total}</td>
-                        <td>{item.revenue}</td>
+                        <td>{formatCurrency(item.revenue)}</td>
                         <td>{item.house.address}</td>
                         <td>{item.status.name}</td>
                         <td>
-                            {item.total > 1 && item.status.id !== 6 && (
+                            {item.total > 1 && item.status.id !== 6 && item.status.id !== 5 && item.status.id !== 2  && (
                                 <button type="button"
                                         onClick={() => cancelOrder(item)}
                                         className="btn btn-danger">Hủy thuê</button>
@@ -100,8 +102,6 @@ function History() {
             </div>
 
             </body>
-            <div style={{backgroundColor: "lightgray", bottom: "0", width: "100%", position: 'fixed'}}><Footer/></div>
-
         </div>
     )
 }

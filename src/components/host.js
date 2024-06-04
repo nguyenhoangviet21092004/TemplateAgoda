@@ -16,7 +16,8 @@ function HostList() {
     const getCurrentPageData = () => {
         const startIndex = (currentPage - 1) * itemsPage;
         const endIndex = startIndex + itemsPage;
-        return filteredData.slice(startIndex, endIndex);
+        const reversedData = [...filteredData].reverse();
+        return reversedData.slice(startIndex, endIndex);
     };
 
     const currentPageData = getCurrentPageData();
@@ -44,7 +45,9 @@ function HostList() {
     useEffect(() => {
         getList()
     }, [])
-
+    function formatCurrency(amount) {
+        return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+    }
 
     return (
         <div>
@@ -76,6 +79,9 @@ function HostList() {
                     <button type="button" className="btn btn-primary" style={{marginRight: "2%"}}>Đăng nhà
                     </button>
                 </Link>
+                <button type="button" className="btn btn-primary" style={{marginRight: "2%"}}>
+                    <a className="dropdown-item" href={`/order/${idAccount}`}>Danh sách đăng kí thuê</a>
+                </button>
                 <table className="table">
                     <thead>
                     <tr>
@@ -87,16 +93,16 @@ function HostList() {
                     </tr>
                     </thead>
                     <tbody>
-                    {currentPageData.map(house =>
+                    {currentPageData.map((house, index) =>
                         <tr>
-                            <th scope="row">{house.id}</th>
+                            <th scope="row">{index + 1}</th>
                             <td>
                                 <a href={`detail/${house.id}`} style={{textDecoration: "none", color: "black"}}>
                                     {house.name}
                                 </a>
                             </td>
                             <td>{house.address}</td>
-                            <td>{house.price} VNĐ/Ngày</td>
+                            <td>{formatCurrency(house.price)}</td>
                             <td>
                                 <a href={`edit/${house.id}`} type="button" className="btn btn-secondary"
                                    style={{marginRight: "2%"}}>
@@ -124,9 +130,7 @@ function HostList() {
                     </ul>
                 </nav>
             </div>
-            <div style={{marginTop: "8.3%"}}>
-                <Footer/>
-            </div>
+
         </div>
     )
 }

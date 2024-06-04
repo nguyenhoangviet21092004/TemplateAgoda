@@ -11,7 +11,7 @@ export default function Home() {
     const role = sessionStorage.getItem('role');
     const idAccount = sessionStorage.getItem('account_id');
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPage, setItemsPage] = useState(5);
+    const [itemsPage, setItemsPage] = useState(12);
     const totalPages = Math.ceil(houses.length / itemsPage);
 
 
@@ -36,9 +36,12 @@ export default function Home() {
     const getCurrentPageData = () => {
         const startIndex = (currentPage - 1) * itemsPage;
         const endIndex = startIndex + itemsPage;
-        return houses.slice(startIndex, endIndex);
+        const reversedHouses = [...houses].reverse();
+        return reversedHouses.slice(startIndex, endIndex);
     };
+
     const currentPageData = getCurrentPageData();
+
 
     const renderPageItems = () => {
         const pageItems = [];
@@ -64,8 +67,11 @@ export default function Home() {
 
     useEffect(() => {
         getList()
-    }, [name,address,numberOfBedRoom, numberOfBathRoom, priceFrom, priceTo,status])
+    }, [name, address, numberOfBedRoom, numberOfBathRoom, priceFrom, priceTo, status])
 
+    function formatCurrency(amount) {
+        return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+    }
 
     return (
         <div>
@@ -107,7 +113,8 @@ export default function Home() {
                                                         <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
                                                         <li><a className="dropdown-item" href="/create">Đăng nhà</a>
                                                         </li>
-                                                        <li><a href={`/history/3`} className="dropdown-item">Lịch sử
+                                                        <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch
+                                                            sử
                                                             đặt</a></li>
                                                         <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a>
                                                         </li>
@@ -122,7 +129,8 @@ export default function Home() {
                                                     {username}
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    <li><a href={`/history/${idAccount}`} class="dropdown-item">Lịch sử đặt</a>
+                                                    <li><a href={`/history/${idAccount}`} class="dropdown-item">Lịch sử
+                                                        đặt</a>
                                                     </li>
                                                     <li><a class="dropdown-item" href="#">Chi tiết tài khoản</a></li>
                                                 </ul>
@@ -134,7 +142,6 @@ export default function Home() {
                         </div>
                     </div>
                 </nav>
-
             </header>
             <div id="carouselExampleSlidesOnly" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner">
@@ -158,7 +165,7 @@ export default function Home() {
 
             <div className="search" style={{marginBottom: "5em", marginTop: "2em"}}>
                 <div className="container">
-                    <form className="form-inline d-flex">
+                    <form className="form-inline d-flex h-40">
 
                         <input className="form-control my-sm-0"
                                style={{width: "400px", borderRadius: '20px', marginRight: "1%", borderColor: 'black'}}
@@ -173,7 +180,7 @@ export default function Home() {
                         <select className="form-select" aria-label="Default select example"
                                 onChange={(e) => setNumberOfBedRoom(e.target.value)}
                                 style={{width: "160px", marginRight: '0.5%', borderColor: 'black'}}>
-                            <option selected >Số phòng ngủ</option>
+                            <option selected>Số phòng ngủ</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -204,7 +211,7 @@ export default function Home() {
                             <option value="1000000 - 3000000">1 - 3 triệu</option>
                             <option value="3000000 - 5000000">3 - 5 triệu</option>
                             <option value="5000000 - 7000000">5 - 7 triệu</option>
-                            <option value="7000000 - 100000000">Trên 7 triệu </option>
+                            <option value="7000000 - 100000000">Trên 7 triệu</option>
                         </select>
                         <select className="form-select" aria-label="Default select example"
                                 onChange={(e) => setStatus(e.target.value)}
@@ -215,7 +222,7 @@ export default function Home() {
                             <option value="3">Đang chờ duyệt</option>
                         </select>
                         <div style={{marginLeft: '4%'}}>
-                            <button className="btn btn-danger  my-2 my-sm-0" type="submit" style={{left: "20%"}}>Tìm
+                            <button className="btn btn-danger h-40  my-2 my-sm-0 " type="submit" style={{left: "20%", width:'100px'}}>Tìm
                                 kiếm
                             </button>
                         </div>
@@ -223,39 +230,27 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="container" style={{borderTop: "1px solid lightgray"}}>
-                <h2>Danh sách các nhà đang cho thuê</h2>
-                {currentPageData.map(house =>
-                    <div className="container">
-                        <div className="card mb-3" style={{maxWidth: '100%'}}>
-                            <div className="row g-0">
-                                <div className="col-md-4">
+            <div className="container">
+                <h2 style={{textAlign: 'center'}}>Danh sách các nhà đang cho thuê</h2>
+                <div className={`d-flex margin-div flex-wrap mt-5 justify-content-between`}>
+                    {currentPageData.map(houses =>
+                        <div class="w-250 margin-child">
+                            <Link to={`/detail/${houses.id}`} className={`none-decoration`}>
+                                <div className={`image-tour `}>
                                     <img
-                                        src={process.env.PUBLIC_URL + '/img/' + (house.images[0]?.nameImage || '')}
-                                        alt="..."/>
+                                        src={process.env.PUBLIC_URL + '/img/' + (houses.images[0]?.nameImage || '')}
+                                        className="w-100 h-250 b-radius-8" alt="work-thumbnail"/>
                                 </div>
-                                <div className="col-md-8">
-                                    <Link to={`/detail/${house.id}`}
-                                          style={{textDecoration: "none", color: "black"}}>
-                                        <div className="card-body">
-                                            <h5 className="card-title">{house.address}</h5>
-                                            <p className="card-text">{formatCurrency(house.price)}</p>
-                                            <p className="card-text"><small
-                                                className="text-body-secondary">{house.description}</small></p>
-                                        </div>
-                                    </Link>
+                                <div className={`title-tour m-2`}>
+                                    <p className="mb-0 clr-black ">{houses.name}</p>
+                                    <p className="mb-0 clr-black"><small>{formatCurrency(houses.price)} Vnđ/ngày</small></p>
+                                    <p className="mb-0 clr-black"><small>{houses.address}</small></p>
                                 </div>
-                                <div className="card-footer text-body-secondary" style={{display: "flex"}}>
-                                    <a href="/hostInfo"
-                                       style={{textDecoration: "none", color: "black"}}>{house.account.name}</a>
-                                    <p className="btn btn-outline-info"
-                                       style={{marginLeft: "79%", color: "black"}}>{house.status.name}</p>
-                                </div>
-
-                            </div>
+                            </Link>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
+
             </div>
 
             <div>

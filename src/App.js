@@ -8,6 +8,7 @@ import Detail from "./components/detail";
 import HostList from "./components/host";
 import Login from './components/Login';
 import History from './components/History';
+import Confirm from "./components/confirm";
 
 function App() {
     return (
@@ -20,6 +21,8 @@ function App() {
                 <Route path='/host' element={< HostList />}></Route>
                 <Route path='/' element={< Login />}></Route>
                 <Route path='/history/:id' element={<History />}></Route>
+                <Route path='/order/:id' element={<Confirm />}></Route>
+
             </Routes>
         </>
     );
