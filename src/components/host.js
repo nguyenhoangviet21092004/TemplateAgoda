@@ -1,7 +1,6 @@
 import {Link} from "react-router-dom";
 import axios from "axios";
 import {useEffect, useState} from "react";
-import Footer from "./Footer";
 
 function HostList() {
     const [houses, setHouses] = useState([]);
@@ -135,4 +134,5 @@ function HostList() {
     )
 }
 
-export default HostList;
+
+export default HostList; 
