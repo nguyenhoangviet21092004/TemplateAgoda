@@ -82,7 +82,8 @@ function Create() {
                 formData.append("numberOfBathRoom", values.numberOfBathRoom);
                 formData.append("accountId", values.accountId);
 
-                values.rooms.forEach((room, index) => {formData.append(`rooms[${index}].name`, room.name);
+                values.rooms.forEach((room, index) => {
+                    formData.append(`rooms[${index}].name`, room.name);
                     formData.append(`rooms[${index}].typeId`, room.typeId);
                 });
 
@@ -96,7 +97,7 @@ function Create() {
 
                 const Toast = Swal.mixin({
                     toast: true,
-                    position: "top-end",
+                    position: "top",
                     showConfirmButton: false,
                     timer: 1500,
                     timerProgressBar: true,
@@ -172,19 +173,32 @@ function Create() {
     const handleWardChange = (event) => {
         setSelectedWard(event.target.value);
     };
+    const [price, setPrice] = useState('');
 
+    const handleChange = (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value === '') {
+            value = '0';
+        }
+        const formattedValue = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
+        setPrice(formattedValue);
+        formAdd.handleChange({ target: { name: 'price', value: Number(value) } });
+    };
     return (
         <div>
             <header>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary"
-                     style={{boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+                    style={{ boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)" }}>
                     <div className="container-fluid">
                         <div className="navbar w-100">
                             <a className="navbar-brand" href="/home">Agoda</a>
                             <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                                    aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon"/>
+                                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span className="navbar-toggler-icon" />
                             </button>
                             <ul className="nav nav-underline">
                                 <li className="nav-item">
@@ -205,7 +219,7 @@ function Create() {
                                             <div className="btn-group dropstart">
                                                 <div>
                                                     <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
                                                         {username}
                                                     </button>
                                                     <ul className="dropdown-menu">
@@ -224,7 +238,7 @@ function Create() {
                                         ) : (
                                             <div>
                                                 <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
                                                     {username}
                                                 </button>
                                                 <ul className="dropdown-menu">
@@ -245,7 +259,7 @@ function Create() {
                 </nav>
             </header>
             <div className="container">
-                <div style={{textAlign: "center", marginTop: "5%"}}>
+                <div style={{ textAlign: "center", marginTop: "5%" }}>
                     <h1>
                         Thêm nhà muốn cho thuê
                     </h1>
@@ -253,15 +267,15 @@ function Create() {
                 <form className="row g-3" onSubmit={formAdd.handleSubmit}>
                     <div className="col-8">
                         <label htmlFor="inputName" className="form-label">Tên nhà:<span
-                            style={{color: 'red', marginLeft: '5px'}}>*</span></label>
+                            style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
                         <input type="text" className="form-control" name="name" id="name"
-                               onChange={formAdd.handleChange}/>{errors.name &&
-                        <span className="text-danger">{errors.name}</span>}
+                            onChange={formAdd.handleChange} />{errors.name &&
+                                <span className="text-danger">{errors.name}</span>}
                     </div>
-                    <div className="col-4" style={{display: "flex"}}>
+                    <div className="col-4" style={{ display: "flex" }}>
                         <div className="col-md">
                             <label className="form-label">Số phòng ngủ:<span
-                                style={{color: 'red', marginLeft: '5px'}}>*</span></label>
+                                style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
                             <select
                                 aria-label="numberOfBedRoom"
                                 id="numberOfBedRoom"
@@ -269,7 +283,7 @@ function Create() {
                                 onChange={(e) => setNumberOfBedRoom(e.target.value)}
                             >
                                 <option value="">Chọn số</option>
-                                {Array.from({length: 10}, (_, i) => i + 1).map((value) => (
+                                {Array.from({ length: 10 }, (_, i) => i + 1).map((value) => (
                                     <option key={value} value={value}>
                                         {value}
                                     </option>
@@ -278,9 +292,9 @@ function Create() {
                             {errors.numberOfBedRoom && <span className="text-danger">{errors.numberOfBedRoom}</span>}
                         </div>
 
-                        <div className="col-md" style={{marginLeft: "2%"}}>
+                        <div className="col-md" style={{ marginLeft: "2%" }}>
                             <label className="form-label">Số phòng tắm:<span
-                                style={{color: 'red', marginLeft: '5px'}}>*</span></label>
+                                style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
 
                             <select
                                 aria-label="numberOfBathRoom"
@@ -290,7 +304,7 @@ function Create() {
                                 onChange={formAdd.handleChange}
                             >
                                 <option value="">Chọn số</option>
-                                {Array.from({length: 3}, (_, i) => i + 1).map((value) => (
+                                {Array.from({ length: 3 }, (_, i) => i + 1).map((value) => (
                                     <option key={value} value={value}>
                                         {value}
                                     </option>
@@ -299,29 +313,29 @@ function Create() {
                             {errors.numberOfBathRoom && <span className="text-danger">{errors.numberOfBathRoom}</span>}
                         </div>
                     </div>
-                    <div style={{marginTop: "3%"}}>
+                    <div style={{ marginTop: "3%" }}>
                         <label htmlFor="inputName" className="form-label">Địa chỉ :
                             <span
-                                style={{color: 'red', marginLeft: '5px'}}>*</span></label>
-                        <label htmlFor="inputName" className="form-label" style={{marginLeft: '60%'}}>Địa chỉ :
+                                style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
+                        <label htmlFor="inputName" className="form-label" style={{ marginLeft: '60%' }}>Địa chỉ :
                             <span
-                                style={{color: 'red', marginLeft: '5px'}}>*</span></label>
+                                style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
                         <div>
-                            <div className="col-12" style={{display: "flex"}}>
-                                <div style={{display: "flex", width: "66%"}}>
+                            <div className="col-12" style={{ display: "flex" }}>
+                                <div style={{ display: "flex", width: "66%" }}>
                                     <div className="col-4">
                                         <select className="form-select form-select-sm mb-3" name="address"
-                                                value={selectedCity} onChange={handleCityChange}>
+                                            value={selectedCity} onChange={handleCityChange}>
                                             <option value="" selected>Chọn tỉnh thành</option>
                                             {cities.map((city) => (<option key={city.Id} value={city.Name}>
-                                                    {city.Name}
-                                                </option>
+                                                {city.Name}
+                                            </option>
                                             ))}
                                         </select>
                                     </div>
                                     <div className="col-4">
                                         <select className="form-select form-select-sm mb-3" name="address"
-                                                onChange={handleDistrictChange}>
+                                            onChange={handleDistrictChange}>
                                             <option value="" selected>Chọn quận huyện</option>
                                             {districts.map((district) => (
                                                 <option key={district.Id} value={district.Name}>
@@ -332,7 +346,7 @@ function Create() {
                                     </div>
                                     <div className="col-4">
                                         <select className="form-select form-select-sm" name="address"
-                                                onChange={handleWardChange}>
+                                            onChange={handleWardChange}>
                                             <option value="" selected>Chọn phường xã</option>
                                             {wards.map((ward) => (
                                                 <option key={ward.Id} value={ward.Name}>
@@ -342,36 +356,38 @@ function Create() {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="col-md-4" style={{width: "32%", marginLeft: "2%"}}>
-                                    <input type="text" className="form-control" style={{height: "30px"}} name="address"
-                                           onChange={(e) => setNumber(e.target.value)}/>
+                                <div className="col-md-4" style={{ width: "32%", marginLeft: "2%" }}>
+                                    <input type="text" className="form-control" style={{ height: "30px" }} name="address"
+                                        onChange={(e) => setNumber(e.target.value)} />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="col-12" style={{display: "flex"}}>
+                    <div className="col-12" style={{ display: "flex" }}>
                         <div className="col-8">
                             <div>
                                 <label className="form-label">Giá:<span
-                                    style={{color: 'red', marginLeft: '5px'}}>*</span></label>
-                                <div style={{display: "flex"}}>
+                                    style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
+                                <div style={{ display: "flex" }}>
                                     <div className="input-group ">
-                                        <input type="text" className="form-control" id="price" name="price"
-                                               onChange={formAdd.handleChange}
-                                               aria-label="Amount (to the nearest dollar)"/>
+                                        <input type="text" className="form-control"
+                                            id="price" name="price"
+                                            value={price}
+                                            onChange={handleChange}
+                                            aria-label="Amount (to the nearest dollar)" />
                                         <span className="input-group-text">VNĐ</span></div>
                                 </div>
                             </div>
-                            <div className="form-floating" style={{marginTop: "3%"}}>
+                            <div className="form-floating" style={{ marginTop: "3%" }}>
                                 <textarea className="form-control" placeholder="Leave a comment here" name="description"
-                                          id="description" onChange={formAdd.handleChange}
-                                          style={{height: "250px"}}></textarea>
+                                    id="description" onChange={formAdd.handleChange}
+                                    style={{ height: "250px" }}></textarea>
                                 <label htmlFor="floatingTextarea2">Mô tả</label>
                             </div>
 
                         </div>
-                        <div className="col-4" style={{width: "32%", marginLeft: "1%", marginTop: "3%"}}>
-                            <div className="col-md" style={{marginLeft: "1%"}}>
+                        <div className="col-4" style={{ width: "32%", marginLeft: "1%", marginTop: "3%" }}>
+                            <div className="col-md" style={{ marginLeft: "1%" }}>
                                 <div className="file-upload-wrapper">
                                     <input
                                         className="file-upload"
@@ -380,7 +396,7 @@ function Create() {
                                         onChange={handleImageChanges}
                                         type="file"
                                         id="formFileMultiple"
-                                        multiple/>
+                                        multiple />
                                     <label htmlFor="file-upload">Thêm ảnh</label>
                                 </div>
                             </div>
@@ -399,8 +415,8 @@ function Create() {
                                                 </div>
                                                 <div>
                                                     <FontAwesomeIcon icon={faRectangleXmark}
-                                                                     onClick={() => handleRemoveImage(index)}
-                                                                     style={{width: "100%"}}/>
+                                                        onClick={() => handleRemoveImage(index)}
+                                                        style={{ width: "100%" }} />
 
                                                 </div>
                                             </div>
@@ -427,7 +443,7 @@ function Create() {
                                                     onChange={formAdd.handleChange}
                                                 />
                                                 <label htmlFor={`room.name-${index}`}>Tên phòng:<span
-                                                    style={{color: 'red', marginLeft: '5px'}}>*</span></label>
+                                                    style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
                                                 {errors[`rooms[${index}].name`] &&
                                                     <span
                                                         className="text-danger">{errors[`rooms[${index}].name`]}</span>}
@@ -450,7 +466,7 @@ function Create() {
                                                     ))}
                                                 </select>
                                                 <label htmlFor={`rooms.typeId-${index}`}>Chọn loại phòng:<span
-                                                    style={{color: 'red', marginLeft: '5px'}}>*</span></label>
+                                                    style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
                                                 {errors[`rooms[${index}].typeId`] &&
                                                     <span
                                                         className="text-danger">{errors[`rooms[${index}].typeId`]}</span>}
@@ -467,11 +483,11 @@ function Create() {
                         <div class="toast-container position-fixed bottom-0 end-0 p-3">
                             <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                                 <div class="toast-header">
-                                    <img src="..." class="rounded me-2" alt="..."/>
+                                    <img src="..." class="rounded me-2" alt="..." />
                                     <strong class="me-auto">Bootstrap</strong>
                                     <small>11 mins ago</small>
                                     <button type="button" class="btn-close" data-bs-dismiss="toast"
-                                            aria-label="Close"></button>
+                                        aria-label="Close"></button>
                                 </div>
                                 <div class="toast-body">
                                     Hello, world! This is a toast message.
@@ -480,17 +496,17 @@ function Create() {
                         </div>
                     </div>
 
-                    <div className="ms-10" style={{display: "flex", justifyContent: "flex-end", paddingRight: "14%"}}>
+                    <div className="ms-10" style={{ display: "flex", justifyContent: "flex-end", paddingRight: "14%" }}>
                         <Link to={"/host"}>
                             <button className="btn btn-outline-secondary"
-                                    style={{color: "black", marginRight: "1%"}}>Hủy
+                                style={{ color: "black", marginRight: "1%" }}>Hủy
                             </button>
                         </Link>
                         <button type="submit" className="btn btn-outline-primary ms-2">Thêm nhà</button>
                     </div>
                 </form>
             </div>
-            <footer style={{marginTop: "10%"}}>
+            <footer style={{ marginTop: "10%" }}>
 
             </footer>
         </div>

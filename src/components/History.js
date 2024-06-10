@@ -80,7 +80,7 @@ function History() {
                     </tr>
                     </thead>
                     <tbody>
-                    {order.reverse().map(item => <tr>
+                    {order.map(item => <tr>
                         <td scope="row">{item.timeStart} đến {item.timeEnd}</td>
                         <td><Link to="/detail" style={{textDecoration: "none", color: "black"}}>{item.house.name}</Link>
                         </td>
@@ -89,7 +89,7 @@ function History() {
                         <td>{item.house.address}</td>
                         <td>{item.status.name}</td>
                         <td>
-                            {item.total > 1 && item.status.id !== 6 && item.status.id !== 5 && item.status.id !== 2  && (
+                            {item.status.id !== 6 && item.status.id !== 5 && item.status.id !== 2  && (
                                 <button type="button"
                                         onClick={() => cancelOrder(item)}
                                         className="btn btn-danger">Hủy thuê</button>
