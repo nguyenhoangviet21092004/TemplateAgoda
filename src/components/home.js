@@ -3,6 +3,7 @@ import {Button} from "bootstrap";
 import {useEffect, useState} from "react";
 import {Link, useLocation} from "react-router-dom";
 import Footer from "./Footer";
+import "../css/home.css";
 
 export default function Home() {
     const [houses, setHouses] = useState([]);
@@ -74,17 +75,18 @@ export default function Home() {
     }
 
     return (
-        <div>
-            <header>
+
+        <div className="body">
+            <div className="header" style={{ position: "sticky", top: "0", zIndex: "1000" }}>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary"
-                     style={{boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+                    style={{ boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)" }}>
                     <div className="container-fluid">
                         <div className="navbar w-100">
                             <a className="navbar-brand" href="/home">Agoda</a>
                             <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                                    aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon"/>
+                                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span className="navbar-toggler-icon" />
                             </button>
                             <ul class="nav nav-underline">
                                 <li class="nav-item">
@@ -94,19 +96,12 @@ export default function Home() {
                             </ul>
                             <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                                 <div className="navbar-nav ">
-
-                                    {/* <a className="nav-link" href="#" style={{ Left: "420%" }}>Login</a>
-                                    <p style={{ marginTop: '0.40em' }}>|</p>
-                                    <a className="nav-link" href="#">Sign in</a> */}
-
-                                    <div className="dropdown">
-
+                                    <div className="dropdown" >
                                         {role === 'admin' || role === 'host' ? (
                                             <div className="btn-group dropstart">
                                                 <div>
-
                                                     <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
                                                         {username}
                                                     </button>
                                                     <ul className="dropdown-menu">
@@ -120,12 +115,11 @@ export default function Home() {
                                                         </li>
                                                     </ul>
                                                 </div>
-
-                                            </div>
+</div>
                                         ) : (
                                             <div>
                                                 <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
                                                     {username}
                                                 </button>
                                                 <ul class="dropdown-menu">
@@ -142,135 +136,143 @@ export default function Home() {
                         </div>
                     </div>
                 </nav>
-            </header>
-            <div id="carouselExampleSlidesOnly" className="carousel slide" data-bs-ride="carousel">
-                <div className="carousel-inner">
-                    <div className="carousel-item active">
-                        <img
-                            src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/b6e874107714719.5fad336f21e5b.png"
-                            className="d-block w-100" alt="..."/>
-                    </div>
-                    <div className="carousel-item">
-                        <img
-                            src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/945451107714719.5fad336f20b9c.png"
-                            className="d-block w-100" alt="..."/>
-                    </div>
-                    <div className="carousel-item">
-                        <img
-                            src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/873875107714719.5fad336f1fe85.png"
-                            className="d-block w-100" alt="..."/>
+            </div>
+            <div className="navbars">
+                <div id="carouselExampleSlidesOnly" className="carousel slide" data-bs-ride="carousel" style={{ width: "100%" }}>
+                    <div className="carousel-inner">
+                        <div className="carousel-item active">
+                            <img
+                                src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/b6e874107714719.5fad336f21e5b.png"
+                                className="d-block w-100" alt="..." />
+                        </div>
+                        <div className="carousel-item">
+                            <img
+                                src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/945451107714719.5fad336f20b9c.png"
+                                className="d-block w-100" alt="..." />
+                        </div>
+                        <div className="carousel-item">
+                            <img
+                                src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/873875107714719.5fad336f1fe85.png"
+                                className="d-block w-100" alt="..." />
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div className="search" style={{marginBottom: "5em", marginTop: "2em"}}>
-                <div className="container">
-                    <form className="form-inline d-flex h-40">
-
-                        <input className="form-control my-sm-0"
-                               style={{width: "400px", borderRadius: '20px', marginRight: "1%", borderColor: 'black'}}
-                               type="search"
-                               onChange={(e) => setName(e.target.value)}
-                               placeholder="Tìm tên nhà cho thuê" aria-label="Search"/>
-                        <input className="form-control my-sm-0"
-                               style={{width: "400px", borderRadius: '20px', marginRight: "1%", borderColor: 'black'}}
-                               type="search"
-                               onChange={(e) => setAddress(e.target.value)}
-                               placeholder="Tìm địa chỉ nhà cho thuê" aria-label="Search"/>
-                        <select className="form-select" aria-label="Default select example"
+                <div className="search" style={{ marginBottom: "3em", marginTop: "2em" }}>
+                    <div className="containerSearch">
+                        <form className="form-inline d-flex h-40">
+                            <input className="form-control my-sm-0"
+                                style={{ width: "13%", borderRadius: '20px', marginRight: "1%", borderColor: 'black' }}
+                                type="search"
+onChange={(e) => setName(e.target.value)}
+                                placeholder="Tìm tên nhà cho thuê" aria-label="Search" />
+                            <input className="form-control my-sm-0"
+                                style={{ width: "15%", borderRadius: '20px', marginRight: "1%", borderColor: 'black' }}
+                                type="search"
+                                onChange={(e) => setAddress(e.target.value)}
+                                placeholder="Tìm địa chỉ nhà cho thuê" aria-label="Search" />
+                            <select className="form-select" aria-label="Default select example"
                                 onChange={(e) => setNumberOfBedRoom(e.target.value)}
-                                style={{width: "160px", marginRight: '0.5%', borderColor: 'black'}}>
-                            <option selected>Số phòng ngủ</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                        </select>
-                        <select className="form-select" aria-label="Default select example"
+                                style={{ width: "11%", marginRight: '0.5%', borderColor: 'black' }}>
+                                <option selected>Số phòng ngủ</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                            <select className="form-select" aria-label="Default select example"
                                 onChange={(e) => setNumberOfBathRoom(e.target.value)}
-                                style={{width: "160px", borderColor: 'black'}}>
-                            <option selected>Số phòng tắm</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
-                        <select
-                            className="form-select"
-                            aria-label="Default select example"
-                            onChange={handleSelectChange}
-                            style={{width: '160px', marginLeft: '0.5%', borderColor: 'black'}}
-                        >
-                            <option value="">Giá</option>
-                            <option value="0 - 1000000">Dưới 1 triệu</option>
-                            <option value="1000000 - 3000000">1 - 3 triệu</option>
-                            <option value="3000000 - 5000000">3 - 5 triệu</option>
-                            <option value="5000000 - 7000000">5 - 7 triệu</option>
-                            <option value="7000000 - 100000000">Trên 7 triệu</option>
-                        </select>
-                        <select className="form-select" aria-label="Default select example"
+                                style={{ width: "11%", borderColor: 'black' }}>
+                                <option selected>Số phòng tắm</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select
+                                className="form-select"
+                                aria-label="Default select example"
+                                onChange={handleSelectChange}
+                                style={{ width: '11%', marginLeft: '0.5%', borderColor: 'black' }}
+                            >
+                                <option value="">Giá</option>
+                                <option value="0 - 1000000">Dưới 1 triệu</option>
+                                <option value="1000000 - 3000000">1 - 3 triệu</option>
+                                <option value="3000000 - 5000000">3 - 5 triệu</option>
+                                <option value="5000000 - 7000000">5 - 7 triệu</option>
+                                <option value="7000000 - 100000000">Trên 7 triệu</option>
+</select>
+                            <select className="form-select" aria-label="Default select example"
                                 onChange={(e) => setStatus(e.target.value)}
-                                style={{width: "160px", marginLeft: '0.5%', borderColor: 'black'}}>
-                            <option selected>Trạng thái</option>
-                            <option value="1">Còn trống</option>
-                            <option value="2">Đã cho thuê</option>
-                            <option value="3">Đang chờ duyệt</option>
-                        </select>
-                        <div style={{marginLeft: '4%'}}>
-                            <button className="btn btn-danger h-40  my-2 my-sm-0 " type="submit" style={{left: "20%", width:'100px'}}>Tìm
-                                kiếm
-                            </button>
-                        </div>
-                    </form>
+                                style={{ width: "11%", marginLeft: '0.5%', borderColor: 'black' }}>
+                                <option selected>Trạng thái</option>
+                                <option value="1">Còn trống</option>
+                                <option value="2">Đã cho thuê</option>
+                                <option value="3">Đang chờ duyệt</option>
+                            </select>
+                            <div style={{ marginLeft: '1%' }}>
+                                <button className="btn btn-danger h-40  my-2 my-sm-0 " type="submit" style={{ left: "20%", width: '100px' }}>Tìm
+                                    kiếm
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
+            <div className="between">
+                <h1 style={{ textAlign: 'center' }}>Danh sách các nhà đang cho thuê</h1>
+                <div className="left">
+                </div>
+                <div className="container">
+                    <div className="container_top" >
+                        {currentPageData.map(houses =>
+                            <div className="a w-250 mb-4" style={{ flexBasis: "calc(25% - 1rem)" }}>
+                                <div>
+                                    <Link to={`/detail/${houses.id}`} className="none-decoration">
+                                        <div className="image-tour">
+                                            <img
+                                                src={process.env.PUBLIC_URL + '/img/' + (houses.images[0]?.nameImage || '')}
+                                                className="w-100 h-250 b-radius-8" alt="work-thumbnail"
+                                            />
+                                        </div>
+                                        <div className="title-tour m-2">
+                                            <p className="mb-0 clr-black">{houses.name}</p>
+                                            <p className="mb-0 clr-black"><small>{formatCurrency(houses.price)} Vnđ/ngày</small></p>
+                                            <p className="mb-0 clr-black"><small>{houses.address}</small></p>
+                                        </div>
+                                    </Link>
+                                </div>
+                                <div class="status-badge">
+                                    {houses.status.name}
+                                </div>
+                            </div>
+                        )}
 
-            <div className="container">
-                <h2 style={{textAlign: 'center'}}>Danh sách các nhà đang cho thuê</h2>
-                <div className={`d-flex margin-div flex-wrap mt-5 justify-content-between`}>
-                    {currentPageData.map(houses =>
-                        <div class="w-250 margin-child">
-                            <Link to={`/detail/${houses.id}`} className={`none-decoration`}>
-                                <div className={`image-tour `}>
-                                    <img
-                                        src={process.env.PUBLIC_URL + '/img/' + (houses.images[0]?.nameImage || '')}
-                                        className="w-100 h-250 b-radius-8" alt="work-thumbnail"/>
-                                </div>
-                                <div className={`title-tour m-2`}>
-                                    <p className="mb-0 clr-black ">{houses.name}</p>
-                                    <p className="mb-0 clr-black"><small>{formatCurrency(houses.price)} Vnđ/ngày</small></p>
-                                    <p className="mb-0 clr-black"><small>{houses.address}</small></p>
-                                </div>
-                            </Link>
-                        </div>
-                    )}
+                    </div>
+                    <div className="right"></div>
+                </div>
+                <div>
+<nav aria-label="Page navigation example">
+                        <ul className="pagination justify-content-center">
+                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                <a className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>Previous</a>
+                            </li>
+                            {renderPageItems()}
+                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                <a className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>Next</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
 
-            </div>
-
-            <div>
-                <nav aria-label="Page navigation example">
-                    <ul className="pagination justify-content-center">
-                        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                            <a className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>Previous</a>
-                        </li>
-                        {renderPageItems()}
-                        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                            <a className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>Next</a>
-                        </li>
-
-                    </ul>
-                </nav>
             </div>
             <div className="footer">
-                <Footer/>
+                <Footer />
             </div>
         </div>
-
     )
 }
