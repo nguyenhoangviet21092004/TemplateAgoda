@@ -1,7 +1,7 @@
 import axios from "axios";
-import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
-import {useFormik} from "formik";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
 import Footer from "./Footer";
 
 function Edit() {
@@ -47,7 +47,7 @@ function Edit() {
                     accountId: existingData.accountId,
                     rooms: existingData.rooms.map((room) => ({
                         name: room.name,
-                        typeId: room.typeId,
+                        typeId: room.typeRoom.id,
                     })),
                 });
             } catch (error) {
@@ -67,8 +67,8 @@ function Edit() {
             price: "",
             numberOfBedRoom: "",
             numberOfBathRoom: "",
-            accountId: "3", // Set default accountId or handle dynamically
-            rooms: [{name: "", typeId: ""}],
+            accountId: idAccount, // Set default accountId or handle dynamically
+            rooms: [{ name: "", typeId: "" }],
         },
         onSubmit: async (values) => {
             try {
@@ -79,7 +79,6 @@ function Edit() {
                 formData.append("price", values.price);
                 formData.append("numberOfBedRoom", values.numberOfBedRoom);
                 formData.append("numberOfBathRoom", values.numberOfBathRoom);
-                formData.append("accountId", 3);
 
                 values.rooms.forEach((room, index) => {
                     formData.append(`rooms[${index}].name`, room.name);
@@ -92,7 +91,7 @@ function Edit() {
                     `http://localhost:8080/api/house/${params.id}`,
                     formData,
                     {
-                        headers: {"Content-Type": "multipart/form-data"},
+                        headers: { "Content-Type": "multipart/form-data" },
                     }
                 );
 
@@ -110,75 +109,55 @@ function Edit() {
         setImage(file);
     }
 
-    const [rooms, setRooms] = useState([{name: '', typeId: ''}]);
-    const handleAddRoom = () => {
-        setRooms([...rooms, {name: '', typeId: ''}]);
-    };
+
 
     return (
         <div>
             <div className="header" style={{ position: "sticky", top: "0", zIndex: "1000" }}>
-                <nav className="navbar navbar-expand-lg bg-body-tertiary"
-                    style={{ boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+                <nav className="navbar navbar-expand-lg bg-white shadow-sm">
                     <div className="container-fluid">
-                        <div className="navbar w-100">
-                            <a className="navbar-brand" href="/home">Agoda</a>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon" />
-                            </button>
-                            <ul class="nav nav-underline">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/home">Trang chủ</a>
-                                </li>
+                        <a className="navbar-brand" href="/home">
+                            <img src="https://banner2.cleanpng.com/20181122/xfy/kisspng-logo-house-renting-home-housing-5bf774850ed024.2354280415429438770607.jpg" alt="Agoda" style={{ height: "30px" }} />
+                        </a>
+                        <a className="nav-link active" aria-current="page" href="/home">Trang chủ</a>
 
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+                            <ul className="navbar-nav">
+                                {role === 'admin' || role === 'host' ? (
+                                    <>
+                                        <li className="nav-item dropdown">
+                                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {username}
+                                            </a>
+                                            <ul className="dropdown-menu dropdown-menu-end">
+                                                <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
+                                                <li><a className="dropdown-item" href="/create">Đăng nhà</a></li>
+                                                <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
+                                                <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                            </ul>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <li className="nav-item dropdown">
+                                        <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {username}
+                                        </a>
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
+                                            <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                        </ul>
+                                    </li>
+                                )}
                             </ul>
-                            <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                                <div className="navbar-nav ">
-                                    <div className="dropdown" >
-                                        {role === 'admin' || role === 'host' ? (
-                                            <div className="btn-group dropstart">
-                                                <div>
-                                                    <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        {username}
-                                                    </button>
-                                                    <ul className="dropdown-menu">
-                                                        <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
-                                                        <li><a className="dropdown-item" href="/create">Đăng nhà</a>
-                                                        </li>
-                                                        <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch
-                                                            sử
-                                                            đặt</a></li>
-                                                        <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-</div>
-                                        ) : (
-                                            <div>
-                                                <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    {username}
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href={`/history/${idAccount}`} class="dropdown-item">Lịch sử
-                                                        đặt</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item" href="#">Chi tiết tài khoản</a></li>
-                                                </ul>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </nav>
             </div>
-            <div className="container w-50" style={{alignContent: "center"}}>
-                <div style={{textAlign: "center"}}>
+            <div className="container w-50" style={{ alignContent: "center" }}>
+                <div style={{ textAlign: "center" }}>
                     <h1>
                         Sửa thông tin nhà đang cho thuê
                     </h1>
@@ -187,41 +166,41 @@ function Edit() {
                     <div className="col-md">
                         <label htmlFor="inputName" className="form-label">Tên nhà</label>
                         <input type="text" className="form-control" name="name" id="name"
-                               value={formEdit.values.name}
-                               onChange={formEdit.handleChange}/>
+                            value={formEdit.values.name}
+                            onChange={formEdit.handleChange} />
                     </div>
                     <div className="col-12">
                         <label htmlFor="address" className="form-label">Địa chỉ</label>
                         <input type="text" className="form-control" id="address" name="address"
-                               value={formEdit.values.address}
-                               onChange={formEdit.handleChange} placeholder="1234 Main St"/>
+                            value={formEdit.values.address}
+                            onChange={formEdit.handleChange} placeholder="1234 Main St" />
                     </div>
                     <div className="input-group">
                         <span className="input-group-text">Số phòng ngủ</span>
                         <input type="number" aria-label="numberOfBedRoom" id="numberOfBedRoom" name="numberOfBedRoom"
-                               className="form-control" onChange={formEdit.handleChange}
-                               value={formEdit.values.numberOfBedRoom}
-                               placeholder="Phòng ngủ"/>
+                            className="form-control" onChange={formEdit.handleChange}
+                            value={formEdit.values.numberOfBedRoom}
+                            placeholder="Phòng ngủ" />
 
                     </div>
                     <div className="input-group">
                         <span className="input-group-text">Số phòng tắm</span>
 
                         <input type="number" aria-label="numberOfBathRoom" id="numberOfBathRoom" name="numberOfBathRoom"
-                               className="form-control" onChange={formEdit.handleChange}
-                               value={formEdit.values.numberOfBathRoom}
-                               placeholder="Phòng tắm"/>
+                            className="form-control" onChange={formEdit.handleChange}
+                            value={formEdit.values.numberOfBathRoom}
+                            placeholder="Phòng tắm" />
                     </div>
                     <div className="mb-3">
                         <label for="formFileMultiple" className="form-label">Thêm ảnh</label>
                         <input className="form-control" name="image" onChange={handleImageChange} type="file"
-                               id="formFileMultiple" multiple/>
+                            id="formFileMultiple" multiple />
                     </div>
                     <div className="input-group mb-3">
                         <span className="input-group-text">Giá</span>
                         <input type="text" className="form-control" id="price" name="price"
-                               value={formEdit.values.price}
-                               onChange={formEdit.handleChange} aria-label="Amount (to the nearest dollar)"/>
+                            value={formEdit.values.price}
+                            onChange={formEdit.handleChange} aria-label="Amount (to the nearest dollar)" />
                         <span className="input-group-text">.00</span>
                     </div>
                     {formEdit.values.rooms.map((room, index) => (
@@ -264,16 +243,16 @@ function Edit() {
                     ))}
                     <div className="form-floating">
                         <textarea className="form-control" placeholder="Leave a comment here" name="description"
-                                  id="description" onChange={formEdit.handleChange}
-                                  value={formEdit.values.description}
-                                  style={{height: "100px"}}></textarea>
+                            id="description" onChange={formEdit.handleChange}
+                            value={formEdit.values.description}
+                            style={{ height: "100px" }}></textarea>
                         <label for="floatingTextarea2">Mô tả</label>
                     </div>
 
                     <div className="col-12">
                         <Link to={"/host"}>
                             <button className="btn btn-outline-secondary"
-                                    style={{color: "black", marginRight: "1%"}}>Hủy
+                                style={{ color: "black", marginRight: "1%" }}>Hủy
                             </button>
                         </Link>
                         <button type="submit" className="btn btn-outline-primary">Sửa nhà</button>
