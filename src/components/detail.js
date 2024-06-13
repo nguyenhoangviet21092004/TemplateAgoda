@@ -7,6 +7,8 @@ import Swal from "sweetalert2"; // theme css file
 import { DatePicker, Space, message } from 'antd';
 import moment from 'moment';
 import Footer from "./Footer";
+import dayjs from 'dayjs';
+
 
 const { RangePicker } = DatePicker;
 function Detail() {
@@ -15,7 +17,7 @@ function Detail() {
     const username = sessionStorage.getItem('username');
     const password = sessionStorage.getItem('password');
     const role = sessionStorage.getItem('role');
-    const idAccount = sessionStorage.getItem('account_id');    const price = house.price;
+    const idAccount = sessionStorage.getItem('account_id'); const price = house.price;
 
     const a = Number(house.price);
     const formattedNumber = a.toLocaleString();
@@ -44,6 +46,18 @@ function Detail() {
     const formattedErrorMessages = errorMessages.map(dateString => {
         return moment(dateString).format('DD-MM-YYYY');
     });
+
+    const [account, setAccount] = useState({});
+
+    async function getAccount() {
+        const res = await axios.get(`http://localhost:8080/api/account/${idAccount}`)
+        console.log(res)
+        setAccount(res.data);
+    }
+
+    useEffect(() => {
+        getAccount()
+    }, []);
 
     console.log(errorMessages)
 
@@ -155,19 +169,20 @@ function Detail() {
 
         if (res.data.length > 0) {
             res.data.forEach(item => {
-                const timeStart = new Date(item.timeStart);
-                const timeEnd = new Date(item.timeEnd);
+                if (item.status.id === 2) {
+                    const timeStart = new Date(item.timeStart);
+                    const timeEnd = new Date(item.timeEnd);
 
-                newTimeStarts.push(timeStart.toISOString().slice(0, 10));
-                newTimeEnds.push(timeEnd.toISOString().slice(0, 10));
+                    newTimeStarts.push(timeStart.toISOString().slice(0, 10));
+                    newTimeEnds.push(timeEnd.toISOString().slice(0, 10));
 
-                let currentDates = timeStart;
-                while (currentDates <= timeEnd) {
-                    newDates.push(currentDates.toISOString().slice(0, 10));
-                    currentDates.setDate(currentDates.getDate() + 1);
+                    let currentDates = timeStart;
+                    while (currentDates <= timeEnd) {
+                        newDates.push(currentDates.toISOString().slice(0, 10));
+                        currentDates.setDate(currentDates.getDate() + 1);
+                    }
                 }
             });
-
         }
         setDates(newDates);
         setTimeStarts(newTimeStarts);
@@ -179,62 +194,45 @@ function Detail() {
     };
     return (
         <div>
-           <div className="header" style={{ position: "sticky", top: "0", zIndex: "1000" }}>
-                <nav className="navbar navbar-expand-lg bg-body-tertiary"
-                    style={{ boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+            <div className="header" style={{ position: "sticky", top: "0", zIndex: "1000" }}>
+                <nav className="navbar navbar-expand-lg bg-white shadow-sm">
                     <div className="container-fluid">
-                        <div className="navbar w-100">
-                            <a className="navbar-brand" href="/home">Agoda</a>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon" />
-                            </button>
-                            <ul class="nav nav-underline">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/home">Trang chủ</a>
-                                </li>
+                        <a className="navbar-brand" href="/home">
+                            <img src="https://banner2.cleanpng.com/20181122/xfy/kisspng-logo-house-renting-home-housing-5bf774850ed024.2354280415429438770607.jpg" alt="Agoda" style={{ height: "30px" }} />
+                        </a>
+                        <a className="nav-link active" aria-current="page" href="/home">Trang chủ</a>
 
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+                            <ul className="navbar-nav">
+                                {role === 'admin' || role === 'host' ? (
+                                    <>
+                                        <li className="nav-item dropdown">
+                                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {username}
+                                            </a>
+                                            <ul className="dropdown-menu dropdown-menu-end">
+                                                <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
+                                                <li><a className="dropdown-item" href="/create">Đăng nhà</a></li>
+                                                <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
+                                                <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                            </ul>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <li className="nav-item dropdown">
+                                        <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {username}
+                                        </a>
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
+                                            <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                        </ul>
+                                    </li>
+                                )}
                             </ul>
-                            <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                                <div className="navbar-nav ">
-                                    <div className="dropdown" >
-                                        {role === 'admin' || role === 'host' ? (
-                                            <div className="btn-group dropstart">
-                                                <div>
-                                                    <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        {username}
-                                                    </button>
-                                                    <ul className="dropdown-menu">
-                                                        <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
-                                                        <li><a className="dropdown-item" href="/create">Đăng nhà</a>
-                                                        </li>
-                                                        <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch
-                                                            sử
-                                                            đặt</a></li>
-                                                        <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-</div>
-                                        ) : (
-                                            <div>
-                                                <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    {username}
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href={`/history/${idAccount}`} class="dropdown-item">Lịch sử
-                                                        đặt</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item" href="#">Chi tiết tài khoản</a></li>
-                                                </ul>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </nav>
@@ -246,7 +244,6 @@ function Detail() {
                     <div class="row justify-content-center">
 
                         <div class="col-lg-8 m-15px-tb">
-                            <h1>{house.name}</h1>
                             <article style={{ overflow: "visible" }} className="article">
                                 <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
                                     <div className="carousel-inner">
@@ -273,50 +270,61 @@ function Detail() {
                                 </div>
                                 <div className="test" style={{ display: "flex" }} >
                                     <div className="test1" style={{ marginTop: '4%' }}>
-                                        <h1>{house.name}</h1>
+                                        <div style={{ display: "flex" }}>
+                                            <h1 style={{ height: '55px', marginBottom: '0', lineHeight: '55px', marginRight: '8px' }}>{house.name}</h1>
+                                            <h5 style={{
+                                                lineHeight: '72px', height: '55px', marginBottom: '0'
+                                            }}>({formattedNumber} VND/ ngày)</h5>
 
-                                        <h2>Giá: {formattedNumber}(VND)</h2>
+                                        </div>
+                                        <p style={{ marginRight: '5px', fontStyle: 'italic', color: 'grey' }}>Ngày đăng:  {moment(house.createdAt).format('DD/MM/YYYY  HH:mm:ss')}</p>
+
                                         <div className="article-content">
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                <h5 style={{ marginRight: '8px' }}>Địa chỉ: {house.address}</h5>
-                                                <a style={{ marginBottom: '13px', marginLeft: '13px' }}
-                                                    onClick={handleViewDirections}>Xem chỉ dẫn</a>
+                                            <div style={{ display: 'flex' }}>
+                                                <h6 style={{ marginRight: '5px' }}>Số phòng ngủ: {house.numberOfBedRoom}</h6>
+                                                <p>,</p>
+                                                <h6 style={{ marginLeft: '5px' }}>Số phòng tắm: {house.numberOfBathRoom}</h6>
                                             </div>
-                                            <h5>Số phòng ngủ: {house.numberOfBedRoom}</h5>
-                                            <h5>Số phòng tắm: {house.numberOfBathRoom}</h5>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <p style={{ marginRight: '8px', fontSize: '20px' }}><b>Địa chỉ:</b><br /> <small>{house.address}</small></p>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <p style={{ marginRight: '8px', fontSize: '20px' }}><b>Phương thức liên hệ:</b><br /><small>SĐT: {account.phoneNumber}</small></p>
                                         </div>
                                     </div>
-                                    <div className="test2" style={{ paddingLeft: '14%', paddingTop: '2%', borderRadius: '10px' }}>
-                                        <p>Ngày bắt đầu | Ngày kết thúc </p>
-                                        <Space direction="vertical" size={12}>
-                                            <RangePicker onChange={handleDateRangeChange}
-                                                disabledDate={disabledDate}
-                                                format="DD-MM-YYYY"
-                                                value={dateRange.length > 0 ? [moment(dateRange[0], 'DD-MM-YYYY'), moment(dateRange[1], 'DD-MM-YYYY')] : []}
-                                                style={{
-                                                    padding: '8px 12px',
-                                                }}
-                                            />
+                                    <div className="test2" style={{ position: 'sticky', left: '66%', marginTop: "4%", borderRadius: '10px', boxShadow: '0px 0px 8px #888888' }}>
+                                        <div style={{ margin: '10%' }}>                                        <p>Ngày bắt đầu | Ngày kết thúc </p>
+                                            <Space direction="vertical" size={12}>
+                                                <RangePicker onChange={handleDateRangeChange}
+                                                    disabledDate={disabledDate}
+                                                    placeholder={['Ngày bắt đầu', 'Ngày kết thúc']}
+                                                    format="DD-MM-YYYY"
+                                                    value={dateRange.length > 0 ? [dayjs(dateRange[0], 'DD-MM-YYYY'), dayjs(dateRange[1], 'DD-MM-YYYY')] : []}
+                                                    style={{
+                                                        padding: '8px 12px',
+                                                    }}
+                                                />
+                                            </Space>
+                                            <p>Số ngày thuê: {numDays}</p>
+                                            <p>Tổng tiền: {formatCurrency(numDays * price)} </p>
+                                            {formattedErrorMessages.length > 0 && <div>
+                                                <span style={{ color: 'red' }}>Ngày </span>
+                                                {formattedErrorMessages.map((mess, index) => (
+                                                    <span key={index} style={{ color: 'red' }}>
+                                                        {mess}
+                                                        {index < formattedErrorMessages.length - 1 ? ', ' : ''}
+                                                    </span>
+                                                ))}
+                                                <span style={{ color: 'red' }}> đã được đặt</span>
+                                            </div>}
 
-                                        </Space>
-                                        <p>Số ngày thuê: {numDays}</p>
-                                        <p>Tổng tiền: {formatCurrency(numDays * price)} </p>
-                                        {formattedErrorMessages.length > 0 && <div>
-                                            <span style={{ color: 'red' }}>Ngày </span>
-                                            {formattedErrorMessages.map((mess, index) => (
-                                                <span key={index} style={{ color: 'red' }}>
-                                                    {mess}
-                                                    {index < formattedErrorMessages.length - 1 ? ', ' : ''}
-                                                </span>
-                                            ))}
-                                            <span style={{ color: 'red' }}> đã được đặt</span>
-                                        </div>}
 
+                                            <form onSubmit={BookHouse}>
+                                                <input type="submit" value="Đặt nhà" />
+                                            </form>
 
-                                        <form onSubmit={BookHouse}>
-                                            <input type="submit" value="Đặt nhà" />
-                                        </form>
-
+                                        </div>
 
                                     </div>
                                 </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
-import {Button} from "bootstrap";
-import {useEffect, useState} from "react";
-import {Link, useLocation} from "react-router-dom";
+import { Button } from "bootstrap";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Footer from "./Footer";
 import "../css/home.css";
 
@@ -31,7 +31,7 @@ export default function Home() {
     };
 
     function formatCurrency(amount) {
-        return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+        return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
 
     const getCurrentPageData = () => {
@@ -71,91 +71,76 @@ export default function Home() {
     }, [name, address, numberOfBedRoom, numberOfBathRoom, priceFrom, priceTo, status])
 
     function formatCurrency(amount) {
-        return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+        return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
 
     return (
 
         <div className="body">
             <div className="header" style={{ position: "sticky", top: "0", zIndex: "1000" }}>
-                <nav className="navbar navbar-expand-lg bg-body-tertiary"
-                    style={{ boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+                <nav className="navbar navbar-expand-lg bg-white shadow-sm">
                     <div className="container-fluid">
-                        <div className="navbar w-100">
-                            <a className="navbar-brand" href="/home">Agoda</a>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon" />
-                            </button>
-                            <ul class="nav nav-underline">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/home">Trang chủ</a>
-                                </li>
+                        <a className="navbar-brand" href="/home">
+                            <img src="https://banner2.cleanpng.com/20181122/xfy/kisspng-logo-house-renting-home-housing-5bf774850ed024.2354280415429438770607.jpg" alt="Agoda" style={{ height: "30px" }} />
+                        </a>
+                        <a className="nav-link active" aria-current="page" href="/home">Trang chủ</a>
 
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+                            <ul className="navbar-nav">
+                                {role === 'admin' || role === 'host' ? (
+                                    <>
+                                        <li className="nav-item dropdown">
+                                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {username}
+                                            </a>
+                                            <ul className="dropdown-menu dropdown-menu-end">
+                                                <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
+                                                <li><a className="dropdown-item" href="/create">Đăng nhà</a></li>
+                                                <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
+                                                <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                            </ul>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <li className="nav-item dropdown">
+                                        <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {username}
+                                        </a>
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
+                                            <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                        </ul>
+                                    </li>
+                                )}
                             </ul>
-                            <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                                <div className="navbar-nav ">
-                                    <div className="dropdown" >
-                                        {role === 'admin' || role === 'host' ? (
-                                            <div className="btn-group dropstart">
-                                                <div>
-                                                    <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        {username}
-                                                    </button>
-                                                    <ul className="dropdown-menu">
-                                                        <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
-                                                        <li><a className="dropdown-item" href="/create">Đăng nhà</a>
-                                                        </li>
-                                                        <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch
-                                                            sử
-                                                            đặt</a></li>
-                                                        <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-</div>
-                                        ) : (
-                                            <div>
-                                                <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    {username}
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href={`/history/${idAccount}`} class="dropdown-item">Lịch sử
-                                                        đặt</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item" href="#">Chi tiết tài khoản</a></li>
-                                                </ul>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </nav>
             </div>
             <div className="navbars">
-                <div id="carouselExampleSlidesOnly" className="carousel slide" data-bs-ride="carousel" style={{ width: "100%" }}>
-                    <div className="carousel-inner">
-                        <div className="carousel-item active">
-                            <img
-                                src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/b6e874107714719.5fad336f21e5b.png"
-                                className="d-block w-100" alt="..." />
+                <div id="carousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/b6e874107714719.5fad336f21e5b.png" class="d-block w-100" alt="Slide 1" />
                         </div>
-                        <div className="carousel-item">
-                            <img
-                                src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/945451107714719.5fad336f20b9c.png"
-                                className="d-block w-100" alt="..." />
+                        <div class="carousel-item">
+                            <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/945451107714719.5fad336f20b9c.png" class="d-block w-100" alt="Slide 2" />
                         </div>
-                        <div className="carousel-item">
-                            <img
-                                src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/873875107714719.5fad336f1fe85.png"
-                                className="d-block w-100" alt="..." />
+                        <div class="carousel-item">
+                            <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/873875107714719.5fad336f1fe85.png" class="d-block w-100" alt="Slide 3" />
                         </div>
                     </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
                 <div className="search" style={{ marginBottom: "3em", marginTop: "2em" }}>
                     <div className="containerSearch">
@@ -163,7 +148,7 @@ export default function Home() {
                             <input className="form-control my-sm-0"
                                 style={{ width: "13%", borderRadius: '20px', marginRight: "1%", borderColor: 'black' }}
                                 type="search"
-onChange={(e) => setName(e.target.value)}
+                                onChange={(e) => setName(e.target.value)}
                                 placeholder="Tìm tên nhà cho thuê" aria-label="Search" />
                             <input className="form-control my-sm-0"
                                 style={{ width: "15%", borderRadius: '20px', marginRight: "1%", borderColor: 'black' }}
@@ -205,14 +190,13 @@ onChange={(e) => setName(e.target.value)}
                                 <option value="3000000 - 5000000">3 - 5 triệu</option>
                                 <option value="5000000 - 7000000">5 - 7 triệu</option>
                                 <option value="7000000 - 100000000">Trên 7 triệu</option>
-</select>
+                            </select>
                             <select className="form-select" aria-label="Default select example"
                                 onChange={(e) => setStatus(e.target.value)}
                                 style={{ width: "11%", marginLeft: '0.5%', borderColor: 'black' }}>
                                 <option selected>Trạng thái</option>
                                 <option value="1">Còn trống</option>
                                 <option value="2">Đã cho thuê</option>
-                                <option value="3">Đang chờ duyệt</option>
                             </select>
                             <div style={{ marginLeft: '1%' }}>
                                 <button className="btn btn-danger h-40  my-2 my-sm-0 " type="submit" style={{ left: "20%", width: '100px' }}>Tìm
@@ -228,35 +212,64 @@ onChange={(e) => setName(e.target.value)}
                 <div className="left">
                 </div>
                 <div className="container">
-                    <div className="container_top" >
+                    <div className="container_top">
                         {currentPageData.map(houses =>
-                            <div className="a w-250 mb-4" style={{ flexBasis: "calc(25% - 1rem)" }}>
-                                <div>
-                                    <Link to={`/detail/${houses.id}`} className="none-decoration">
-                                        <div className="image-tour">
-                                            <img
-                                                src={process.env.PUBLIC_URL + '/img/' + (houses.images[0]?.nameImage || '')}
-                                                className="w-100 h-250 b-radius-8" alt="work-thumbnail"
-                                            />
-                                        </div>
-                                        <div className="title-tour m-2">
-                                            <p className="mb-0 clr-black">{houses.name}</p>
-                                            <p className="mb-0 clr-black"><small>{formatCurrency(houses.price)} Vnđ/ngày</small></p>
-                                            <p className="mb-0 clr-black"><small>{houses.address}</small></p>
-                                        </div>
-                                    </Link>
-                                </div>
-                                <div class="status-badge">
-                                    {houses.status.name}
+                            <div className="house-card">
+                                <Link to={`/detail/${houses.id}`}>
+                                    <div className="image-tour">
+                                        <img
+                                            src={process.env.PUBLIC_URL + '/img/' + (houses.images[0]?.nameImage || '')}
+                                            alt="work-thumbnail"
+                                        />
+                                    </div>
+                                </Link>
+                                <div className="title_status">
+
+                                    <div className="title-tour">
+                                        <p>{houses.name}</p>
+                                        <p><small>{formatCurrency(houses.price)}/ngày</small></p>
+                                        <p><small>{houses.address}</small></p>
+                                    </div>
+                                    <div
+                                        className="status-badge"
+                                        style={{
+                                            backgroundColor: (() => {
+                                                console.log(houses.status.id)
+
+                                                switch (houses.status.name.toLowerCase()) {
+                                                    case 'đang trống':
+                                                        return ' #E53935'; // Màu xanh lá cây
+                                                    case 'đã thuê':
+                                                        return '#4CAF50'; // Màu đỏ
+                                                    default:
+                                                        return '#FFEB3B'; // Màu vàng
+                                                }
+                                            })(),
+                                            color: '#FFFFFF', // Màu chữ trắng
+                                            padding: '8px 16px',
+                                            borderRadius: '20px',
+                                            display: 'inline-block',
+                                            fontSize: '14px',
+                                            fontWeight: 'bold',
+                                            textTransform: 'uppercase',
+                                            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                            transition: 'transform 0.2s ease-in-out',
+
+                                        }}
+                                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'} >
+
+                                        {houses.status.name}
+
+                                    </div>
                                 </div>
                             </div>
                         )}
-
                     </div>
                     <div className="right"></div>
                 </div>
-                <div>
-<nav aria-label="Page navigation example">
+                <div style={{ marginTop: '1rem' }}>
+                    <nav aria-label="Page navigation example">
                         <ul className="pagination justify-content-center">
                             <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                                 <a className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>Previous</a>

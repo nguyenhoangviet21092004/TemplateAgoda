@@ -190,62 +190,45 @@ function Create() {
     };
     return (
         <div>
-           <div className="header" style={{ position: "sticky", top: "0", zIndex: "1000" }}>
-                <nav className="navbar navbar-expand-lg bg-body-tertiary"
-                    style={{ boxShadow: " 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+            <div className="header" style={{ position: "sticky", top: "0", zIndex: "1000" }}>
+                <nav className="navbar navbar-expand-lg bg-white shadow-sm">
                     <div className="container-fluid">
-                        <div className="navbar w-100">
-                            <a className="navbar-brand" href="/home">Agoda</a>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon" />
-                            </button>
-                            <ul class="nav nav-underline">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/home">Trang chủ</a>
-                                </li>
+                        <a className="navbar-brand" href="/home">
+                            <img src="https://banner2.cleanpng.com/20181122/xfy/kisspng-logo-house-renting-home-housing-5bf774850ed024.2354280415429438770607.jpg" alt="Agoda" style={{ height: "30px" }} />
+                        </a>
+                        <a className="nav-link active" aria-current="page" href="/home">Trang chủ</a>
 
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+                            <ul className="navbar-nav">
+                                {role === 'admin' || role === 'host' ? (
+                                    <>
+                                        <li className="nav-item dropdown">
+                                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {username}
+                                            </a>
+                                            <ul className="dropdown-menu dropdown-menu-end">
+                                                <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
+                                                <li><a className="dropdown-item" href="/create">Đăng nhà</a></li>
+                                                <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
+                                                <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                            </ul>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <li className="nav-item dropdown">
+                                        <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {username}
+                                        </a>
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
+                                            <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                        </ul>
+                                    </li>
+                                )}
                             </ul>
-                            <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                                <div className="navbar-nav ">
-                                    <div className="dropdown" >
-                                        {role === 'admin' || role === 'host' ? (
-                                            <div className="btn-group dropstart">
-                                                <div>
-                                                    <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        {username}
-                                                    </button>
-                                                    <ul className="dropdown-menu">
-                                                        <li><a className="dropdown-item" href="/host">Chủ nhà</a></li>
-                                                        <li><a className="dropdown-item" href="/create">Đăng nhà</a>
-                                                        </li>
-                                                        <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch
-                                                            sử
-                                                            đặt</a></li>
-                                                        <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-</div>
-                                        ) : (
-                                            <div>
-                                                <button type="button" className="btn btn-secondary dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    {username}
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href={`/history/${idAccount}`} class="dropdown-item">Lịch sử
-                                                        đặt</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item" href="#">Chi tiết tài khoản</a></li>
-                                                </ul>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </nav>
@@ -498,7 +481,7 @@ function Create() {
                     </div>
                 </form>
             </div>
-            <div className="footer">
+            <div className="footer" >
                 <Footer />
             </div>
         </div>
