@@ -20,7 +20,7 @@ function History() {
     console.log(order)
 
     async function getHistory() {
-        const res = await axios.get(`http://easygoing-passion.railway.internal/api/order/${idAccount}`);
+        const res = await axios.get(`http://api-hotel.up.railway.app/api/order/${idAccount}`);
         setOrder(res.data);
         setToday(new Date());
         console.log(order);
@@ -40,7 +40,7 @@ function History() {
     }, [])
 
     async function cancelOrder(item) {
-        const response = await axios.put(`http://easygoing-passion.railway.internal/api/order/${item.id}`, {
+        const response = await axios.put(`http://api-hotel.up.railway.app/api/order/${item.id}`, {
             timeStart: item.timeStart,
             timeEnd: item.timeEnd,
             revenue: item.revenue,

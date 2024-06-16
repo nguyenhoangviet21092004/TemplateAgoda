@@ -50,7 +50,7 @@ function Detail() {
     const [account, setAccount] = useState({});
 
     async function getAccount() {
-        const res = await axios.get(`http://api-hotel.up.railway.app:8080/api/account/${idAccount}`)
+        const res = await axios.get(`http://api-hotel.up.railway.app/api/account/${idAccount}`)
         console.log(res)
         setAccount(res.data);
     }
@@ -109,7 +109,7 @@ function Detail() {
     }
 
     async function getHouse() {
-        const res = await axios.get(`http://api-hotel.up.railway.app:8080/api/house/${params.id}`)
+        const res = await axios.get(`http://api-hotel.up.railway.app/api/house/${params.id}`)
         setHouse(res.data);
     }
 
@@ -127,7 +127,7 @@ function Detail() {
         e.preventDefault();
 
         const date = `${yearStart}-${monthStart}-${dayStart} -- ${yearEnd}-${monthEnd}-${dayEnd}`;
-        const response = await axios.post('http://api-hotel.up.railway.app:8080/api/order', {
+        const response = await axios.post('http://api-hotel.up.railway.app/api/order', {
             date: date,
             idHouse: params.id,
             total: numDays,

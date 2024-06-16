@@ -41,7 +41,7 @@ function HostList() {
     };
 
     async function getList() {
-        const response = await axios.get(`http://easygoing-passion.railway.internal/api/house`);
+        const response = await axios.get(`http://api-hotel.up.railway.app/api/house`);
         setHouses(response.data)
         console.log(idAccount)
     };
@@ -54,7 +54,7 @@ function HostList() {
     }
     async function deleteHouse(id){
         if(window.confirm("Bạn có chắc muốn xóa nhà không !")){
-            const response=await axios.delete(`http://easygoing-passion.railway.internal/api/house/${id}`);
+            const response=await axios.delete(`http://api-hotel.up.railway.app/api/house/${id}`);
          } getList();
     }
 

@@ -27,7 +27,7 @@ function Login() {
     };
     async function Login(e) {
         e.preventDefault();
-        const reponse = await axios.post('http://easygoing-passion.railway.internal/api/account/login', {
+        const reponse = await axios.post('http://api-hotel.up.railway.app/api/account/login', {
             username: username,
             password: password
         })
