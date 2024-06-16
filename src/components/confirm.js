@@ -50,7 +50,7 @@ function Confirm() {
 
 
     async function getOrder() {
-        const res = await axios.get(`http://localhost:8080/api/order/host/${idAccount}`);
+        const res = await axios.get(`http://api-hotel.up.railway.app/api/order/host/${idAccount}`);
         setOrder(res.data);
     };
 
@@ -61,7 +61,7 @@ function Confirm() {
     }, [])
 
     async function yes(order) {
-        const response = await axios.put(`http://localhost:8080/api/order/yes/${idAccount}`, {
+        const response = await axios.put(`http://api-hotel.up.railway.app/api/order/yes/${idAccount}`, {
             total: "1",
             id: order.id
         });
@@ -69,7 +69,7 @@ function Confirm() {
     }
 
     async function no(order) {
-        const response = await axios.put(`http://localhost:8080/api/order/yes/${idAccount}`, {
+        const response = await axios.put(`http://api-hotel.up.railway.app/api/order/yes/${idAccount}`, {
             total: "2",
             id: order.id
         });

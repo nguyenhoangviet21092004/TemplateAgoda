@@ -21,7 +21,7 @@ function Create() {
     useEffect(() => {
         async function getTypeRooms() {
             try {
-                const response = await axios.get("http://localhost:8080/api/type-room");
+                const response = await axios.get("http://easygoing-passion.railway.internal/api/type-room");
                 setTypeRooms(response.data);
             } catch (error) {
                 console.error("Error fetching type rooms:", error);
@@ -92,7 +92,7 @@ function Create() {
                     formData.append("image", image[i]);
                 }
 
-                await axios.post("http://localhost:8080/api/house", formData, {
+                await axios.post("http://easygoing-passion.railway.internal/api/house", formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
 

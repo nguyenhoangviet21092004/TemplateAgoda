@@ -60,7 +60,7 @@ export default function Home() {
 
     async function getList() {
         const response =
-            await axios.get(`http://localhost:8080/api/house?name=${name}&address=${address}&numberOfBedRoom=${numberOfBedRoom}&numberOfBathRoom=${numberOfBathRoom}&priceFrom=${priceFrom}&priceTo=${priceTo}&status=${status}`);
+            await axios.get(`http://easygoing-passion.railway.internal/api/house?name=${name}&address=${address}&numberOfBedRoom=${numberOfBedRoom}&numberOfBathRoom=${numberOfBathRoom}&priceFrom=${priceFrom}&priceTo=${priceTo}&status=${status}`);
         // console.log(response.data)
         setHouses(response.data);
 
