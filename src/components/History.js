@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import SideBar from "./sidebar/sidebar";
 import { da } from "date-fns/locale";
 import moment from "moment";
 import Footer from "./Footer";
