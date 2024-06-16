@@ -82,7 +82,7 @@ function Login() {
                                         <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
                                         <label class="form-check-label" for="form1Example3"> Ghi nhớ đăng nhập </label>
                                     </div>
-                                    <a href="#!">Quên mật khẩu</a>
+                                    <a href="">Quên mật khẩu</a>
                                 </div>
 
                                 {/* <!-- Submit button --> */}
