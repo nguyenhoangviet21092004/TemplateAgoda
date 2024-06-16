@@ -130,7 +130,7 @@ function History() {
                 </nav>
             </div>
             <body>
-                <div className="container" style={{ marginTop: '2%' }}>
+                <div className="container" style={{ marginTop: '2%', minHeight: '19rem' }}>
                     <h2>Danh sách nhà đang thuê</h2>
                     <table class="custom-table">
                         <thead>
@@ -162,21 +162,25 @@ function History() {
                                                 case 2:
                                                     return 'Đã thuê';
                                                 case 3:
-                                                    return 'Đang trờ duyệt';
+                                                    return 'Chờ duyệt';
                                                 default:
-                                                    return 'a';
+                                                    return 'Đã hủy';
                                             }
                                         })()}
                                     </td>
 
                                     <td>
-                                        {moment(item.timeStart).toDate().getDate() > today.getDate() && moment(item.timeStart).toDate().getDate() - today.getDate() >= 1 ? (
-                                            <button type="button" style={{ border: 'none' }} onClick={() => cancelOrder(item)} className="custom-button custom-button--danger">
-                                                Hủy thuê
-                                            </button>
-                                        ) : moment(item.timeStart).toDate().getDate() < today.getDate() && item.status.name !== "Đã thuê" ? (
-                                            <div className="custom-text">Quá hạn thuê</div>
-                                        ) : null}
+                                        {item.status.id === 3 &&
+                                            <div>
+                                                {moment(item.timeStart).toDate().getDate() > today.getDate() && moment(item.timeStart).toDate().getDate() - today.getDate() >= 1 ? (
+                                                    <button type="button" style={{ border: 'none' }} onClick={() => cancelOrder(item)} className="custom-button custom-button--danger">
+                                                        Hủy thuê
+                                                    </button>
+                                                ) : moment(item.timeStart).toDate().getDate() < today.getDate() && item.status.name !== "Đã thuê" ? (
+                                                    <div className="custom-text">Quá hạn thuê</div>
+                                                ) : null}
+                                            </div>
+                                        }
                                     </td>
                                 </tr>
                             ))}

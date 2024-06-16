@@ -162,102 +162,246 @@ function Edit() {
                         Sửa thông tin nhà đang cho thuê
                     </h1>
                 </div>
-                <form className="row g-3" onSubmit={formEdit.handleSubmit}>
-                    <div className="col-md">
-                        <label htmlFor="inputName" className="form-label">Tên nhà</label>
+                {/* <form className="row g-3" style={{marginBottom:'1rem'}} onSubmit={formEdit.handleSubmit}>
+                    <div className="col-8">
+                        <label htmlFor="inputName" className="form-label">Tên nhà:<span
+                            style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
                         <input type="text" className="form-control" name="name" id="name"
-                            value={formEdit.values.name}
-                            onChange={formEdit.handleChange} />
+                            onChange={formEdit.handleChange} />{errors.name &&
+                                <span className="text-danger">{errors.name}</span>}
                     </div>
-                    <div className="col-12">
-                        <label htmlFor="address" className="form-label">Địa chỉ</label>
-                        <input type="text" className="form-control" id="address" name="address"
-                            value={formEdit.values.address}
-                            onChange={formEdit.handleChange} placeholder="1234 Main St" />
-                    </div>
-                    <div className="input-group">
-                        <span className="input-group-text">Số phòng ngủ</span>
-                        <input type="number" aria-label="numberOfBedRoom" id="numberOfBedRoom" name="numberOfBedRoom"
-                            className="form-control" onChange={formEdit.handleChange}
-                            value={formEdit.values.numberOfBedRoom}
-                            placeholder="Phòng ngủ" />
+                    <div className="col-4" style={{ display: "flex" }}>
+                        <div className="col-md">
+                            <label className="form-label">Số phòng ngủ:<span
+                                style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
+                            <select
+                                aria-label="numberOfBedRoom"
+                                id="numberOfBedRoom"
+                                name="numberOfBedRoom" className="form-control"
+                                onChange={(e) => setNumberOfBedRoom(e.target.value)}
+                            >
+                                <option value="">Chọn số</option>
+                                {Array.from({ length: 10 }, (_, i) => i + 1).map((value) => (
+                                    <option key={value} value={value}>
+                                        {value}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.numberOfBedRoom && <span className="text-danger">{errors.numberOfBedRoom}</span>}
+                        </div>
 
-                    </div>
-                    <div className="input-group">
-                        <span className="input-group-text">Số phòng tắm</span>
+                        <div className="col-md" style={{ marginLeft: "2%" }}>
+                            <label className="form-label">Số phòng tắm:<span
+                                style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
 
-                        <input type="number" aria-label="numberOfBathRoom" id="numberOfBathRoom" name="numberOfBathRoom"
-                            className="form-control" onChange={formEdit.handleChange}
-                            value={formEdit.values.numberOfBathRoom}
-                            placeholder="Phòng tắm" />
+                            <select
+                                aria-label="numberOfBathRoom"
+                                id="numberOfBathRoom"
+                                name="numberOfBathRoom"
+                                className="form-control"
+                                onChange={formEdit.handleChange}
+                            >
+                                <option value="">Chọn số</option>
+                                {Array.from({ length: 3 }, (_, i) => i + 1).map((value) => (
+                                    <option key={value} value={value}>
+                                        {value}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.numberOfBathRoom && <span className="text-danger">{errors.numberOfBathRoom}</span>}
+                        </div>
                     </div>
-                    <div className="mb-3">
-                        <label for="formFileMultiple" className="form-label">Thêm ảnh</label>
-                        <input className="form-control" name="image" onChange={handleImageChange} type="file"
-                            id="formFileMultiple" multiple />
-                    </div>
-                    <div className="input-group mb-3">
-                        <span className="input-group-text">Giá</span>
-                        <input type="text" className="form-control" id="price" name="price"
-                            value={formEdit.values.price}
-                            onChange={formEdit.handleChange} aria-label="Amount (to the nearest dollar)" />
-                        <span className="input-group-text">.00</span>
-                    </div>
-                    {formEdit.values.rooms.map((room, index) => (
-
-                        <div key={index} className="row g-2">
-                            <div className="col-md">
-                                <div className="form-floating">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={room.name}
-                                        name={`rooms[${index}].name`}
-                                        id={`room.name-${index}`}
-                                        placeholder="Tên phòng"
-                                        onChange={formEdit.handleChange}
-                                    />
-                                    <label htmlFor={`room.name-${index}`}>Tên phòng</label>
-                                </div>
-                            </div>
-                            <div className="col-md">
-                                <div className="form-floating">
-                                    <select
-                                        className="form-select"
-                                        name={`rooms[${index}].typeId`}
-                                        value={room.typeId}
-                                        id={`rooms.typeId-${index}`}
-                                        onChange={formEdit.handleChange}
-                                    >
-                                        <option selected>Loại phòng</option>
-                                        {typeRooms.map((typeRoom) => (
-                                            <option key={typeRoom.id} value={typeRoom.id}>
-                                                {typeRoom.name}
+                    <div style={{ marginTop: "3%" }}>
+                        <label htmlFor="inputName" className="form-label">Địa chỉ :
+                            <span
+                                style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
+                        <label htmlFor="inputName" className="form-label" style={{ marginLeft: '62%' }}>Địa chỉ cụ thể:
+                            </label>
+                        <div>
+                            <div className="col-12" style={{ display: "flex" }}>
+                                <div style={{ display: "flex", width: "66%" }}>
+                                    <div className="col-4">
+                                        <select className="form-select form-select-sm mb-3" name="address"
+                                            value={selectedCity} onChange={handleCityChange}>
+                                            <option value="" selected>Chọn tỉnh thành</option>
+                                            {cities.map((city) => (<option key={city.Id} value={city.Name}>
+                                                {city.Name}
                                             </option>
-                                        ))}
-                                    </select>
-                                    <label htmlFor={`rooms.typeId-${index}`}>Chọn loại phòng</label>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-4">
+                                        <select className="form-select form-select-sm mb-3" name="address"
+                                            onChange={handleDistrictChange}>
+                                            <option value="" selected>Chọn quận huyện</option>
+                                            {districts.map((district) => (
+                                                <option key={district.Id} value={district.Name}>
+                                                    {district.Name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-4">
+                                        <select className="form-select form-select-sm" name="address"
+                                            onChange={handleWardChange}>
+                                            <option value="" selected>Chọn phường xã</option>
+                                            {wards.map((ward) => (
+                                                <option key={ward.Id} value={ward.Name}>
+                                                    {ward.Name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="col-md-4" style={{ width: "32%", marginLeft: "1.5%" }}>
+                                    <input type="text" className="form-control" style={{ height: "30px" }} name="address"
+                                        onChange={(e) => setNumber(e.target.value)} />
                                 </div>
                             </div>
                         </div>
-                    ))}
-                    <div className="form-floating">
-                        <textarea className="form-control" placeholder="Leave a comment here" name="description"
-                            id="description" onChange={formEdit.handleChange}
-                            value={formEdit.values.description}
-                            style={{ height: "100px" }}></textarea>
-                        <label for="floatingTextarea2">Mô tả</label>
+                    </div>
+                    <div className="col-12" style={{ display: "flex" }}>
+                        <div className="col-8">
+                            <div>
+                                <label className="form-label">Giá:<span
+                                    style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
+                                <div style={{ display: "flex" }}>
+                                    <div className="input-group ">
+                                        <input type="text" className="form-control"
+                                            id="price" name="price"
+                                            value={price}
+                                            onChange={handleChange}
+                                            aria-label="Amount (to the nearest dollar)" />
+                                        <span className="input-group-text">VNĐ</span></div>
+                                </div>
+                            </div>
+                            <div className="form-floating" style={{ marginTop: "3%" }}>
+                                <textarea className="form-control" placeholder="Leave a comment here" name="description"
+                                    id="description" onChange={formEdit.handleChange}
+                                    style={{ height: "250px" }}></textarea>
+                                <label htmlFor="floatingTextarea2">Mô tả</label>
+                            </div>
+
+                        </div>
+                        <div className="col-4" style={{ width: "32%", marginLeft: "1%", marginTop: "3%" }}>
+                            <div className="col-md" style={{ marginLeft: "1%" }}>
+                                <div className="file-upload-wrapper">
+                                    <input
+                                        className="file-upload"
+                                        accept="image/*"
+                                        name="image"
+                                        onChange={handleImageChanges}
+                                        type="file"
+                                        id="formFileMultiple"
+                                        multiple />
+                                    <label htmlFor="file-upload">Thêm ảnh</label>
+                                </div>
+                            </div>
+                            {image.length > 0 && (
+                                <div>
+                                    <div className="row">
+                                        {image.map((image, index) => (
+                                            <div key={index} className="image">
+                                                <div className="position-relative">
+                                                    <img
+                                                        src={URL.createObjectURL(image)}
+                                                        alt={`Image ${index}`}
+                                                        className="img-fluid"
+                                                    />
+
+                                                </div>
+                                                <div>
+                                                    <FontAwesomeIcon icon={faRectangleXmark}
+                                                        onClick={() => handleRemoveImage(index)}
+                                                        style={{ width: "100%" }} />
+
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <div className="col-6">
+                        {(() => {
+                            const elements = [];
+                            for (let index = 0; index < numberOfBedRoom; index++) {
+                                elements.push(
+                                    <div key={index} className="row g-2">
+                                        <div className="col-md">
+                                            <div className="form-floating">
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name={`rooms[${index}].name`}
+                                                    id={`room.name-${index}`}
+                                                    placeholder="Tên phòng"
+                                                    onChange={formEdit.handleChange}
+                                                />
+                                                <label htmlFor={`room.name-${index}`}>Tên phòng:<span
+                                                    style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
+                                                {errors[`rooms[${index}].name`] &&
+                                                    <span
+                                                        className="text-danger">{errors[`rooms[${index}].name`]}</span>}
+
+                                            </div>
+                                        </div>
+                                        <div className="col-md">
+                                            <div className="form-floating">
+                                                <select
+                                                    className="form-select"
+                                                    name={`rooms[${index}].typeId`}
+                                                    id={`rooms.typeId-${index}`}
+                                                    onChange={formEdit.handleChange}
+                                                >
+                                                    <option selected>Loại phòng</option>
+                                                    {typeRooms.map((typeRoom) => (
+                                                        <option key={typeRoom.id} value={typeRoom.id}>
+                                                            {typeRoom.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <label htmlFor={`rooms.typeId-${index}`}>Chọn loại phòng:<span
+                                                    style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
+                                                {errors[`rooms[${index}].typeId`] &&
+                                                    <span
+                                                        className="text-danger">{errors[`rooms[${index}].typeId`]}</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                            return elements;
+                        })()}
+                    </div>
+                    <div>
+
+                        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header">
+                                    <img src="..." class="rounded me-2" alt="..." />
+                                    <strong class="me-auto">Bootstrap</strong>
+                                    <small>11 mins ago</small>
+                                    <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="toast-body">
+                                    Hello, world! This is a toast message.
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="col-12">
+                    <div className="ms-10" style={{ display: "flex", justifyContent: "flex-end", paddingRight: "14%" }}>
                         <Link to={"/host"}>
                             <button className="btn btn-outline-secondary"
                                 style={{ color: "black", marginRight: "1%" }}>Hủy
                             </button>
                         </Link>
-                        <button type="submit" className="btn btn-outline-primary">Sửa nhà</button>
+                        <button type="submit" className="btn btn-outline-primary ms-2">Thêm nhà</button>
                     </div>
-                </form>
+                </form> */}
             </div>
             <div className="footer">
                 <Footer />

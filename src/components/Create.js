@@ -239,7 +239,7 @@ function Create() {
                         Thêm nhà muốn cho thuê
                     </h1>
                 </div>
-                <form className="row g-3" onSubmit={formAdd.handleSubmit}>
+                <form className="row g-3" style={{marginBottom:'1rem'}} onSubmit={formAdd.handleSubmit}>
                     <div className="col-8">
                         <label htmlFor="inputName" className="form-label">Tên nhà:<span
                             style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
@@ -292,9 +292,8 @@ function Create() {
                         <label htmlFor="inputName" className="form-label">Địa chỉ :
                             <span
                                 style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
-                        <label htmlFor="inputName" className="form-label" style={{ marginLeft: '60%' }}>Địa chỉ :
-                            <span
-                                style={{ color: 'red', marginLeft: '5px' }}>*</span></label>
+                        <label htmlFor="inputName" className="form-label" style={{ marginLeft: '62%' }}>Địa chỉ cụ thể:
+                            </label>
                         <div>
                             <div className="col-12" style={{ display: "flex" }}>
                                 <div style={{ display: "flex", width: "66%" }}>
@@ -331,7 +330,7 @@ function Create() {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="col-md-4" style={{ width: "32%", marginLeft: "2%" }}>
+                                <div className="col-md-4" style={{ width: "32%", marginLeft: "1.5%" }}>
                                     <input type="text" className="form-control" style={{ height: "30px" }} name="address"
                                         onChange={(e) => setNumber(e.target.value)} />
                                 </div>

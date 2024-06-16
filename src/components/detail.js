@@ -274,10 +274,10 @@ function Detail() {
                                             <h1 style={{ height: '55px', marginBottom: '0', lineHeight: '55px', marginRight: '8px' }}>{house.name}</h1>
                                             <h5 style={{
                                                 lineHeight: '72px', height: '55px', marginBottom: '0'
-                                            }}>({formattedNumber} VND/ ngày)</h5>
+                                            }}>({formattedNumber} VNĐ/ ngày)</h5>
 
                                         </div>
-                                        <p style={{ marginRight: '5px', fontStyle: 'italic', color: 'grey' }}>Ngày đăng:  {moment(house.createdAt).format('DD/MM/YYYY  HH:mm:ss')}</p>
+                                        <p style={{ marginRight: '5px', fontStyle: 'italic', color: 'grey' }}>Ngày đăng:  {moment(house.createdAt).subtract(1, 'month').format('DD/MM/YYYY  HH:mm:ss')}</p>
 
                                         <div className="article-content">
                                             <div style={{ display: 'flex' }}>

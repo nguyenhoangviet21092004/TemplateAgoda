@@ -14,7 +14,7 @@ function HostList() {
     const filteredData = houses.filter(house => house.account.id === parseInt(idAccount));
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPage, setItemsPage] = useState(10);
+    const [itemsPage, setItemsPage] = useState(5);
     const totalPages = Math.ceil(filteredData.length / itemsPage);
 
     const getCurrentPageData = () => {
@@ -108,7 +108,7 @@ function HostList() {
                 </nav>
             </div>
             <body>
-                <div className="container">
+                <div className="container" >
                     <ul class="nav nav-tabs">
                         <Link to="/create">
                             <button type="button" className="btn btn-primary" style={{ marginRight: "2%", position: 'absolute', left: "77%" }}>Đăng nhà
@@ -145,10 +145,10 @@ function HostList() {
                                     <td>{house.address}</td>
                                     <td>{formatCurrency(house.price)}</td>
                                     <td>
-                                        <button style={{border:'none'}} type="button" className="custom-button custom-button--secondary" onClick={() => window.location.href = `edit/${house.id}`}>
+                                        <button style={{border:'none'}} type="button" className="custom-button custom-button--secondary " onClick={() => window.location.href = `edit/${house.id}`}>
                                             Sửa nhà
                                         </button>
-                                      <Link className="btn btn-danger ml-2" onClick={()=> deleteHouse(house.id)}>Xóa</Link>
+                                      <Link className="btn btn-danger ml-2" onClick={()=> deleteHouse(house.id)}>Xóa nhà</Link>
                                     </td>
                                     <td>
                                             
