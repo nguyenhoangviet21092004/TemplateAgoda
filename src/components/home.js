@@ -218,7 +218,7 @@ export default function Home() {
                                 <Link to={`/detail/${houses.id}`}>
                                     <div className="image-tour">
                                         <img
-                                            src={process.env.PUBLIC_URL + '/img/' + (houses.images[0]?.nameImage || '')}
+                                            src={process.env.PUBLIC_URL + 'http://api-hotel.up.railway.app/img/' + (houses.images[0]?.nameImage || '')}
                                             alt="work-thumbnail"
                                         />
                                     </div>
