@@ -23,9 +23,7 @@ function Navbar(){
                     <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                         <div className="navbar-nav ">
 
-                            {/* <a className="nav-link" href="#" style={{ Left: "420%" }}>Login</a>
-                                    <p style={{ marginTop: '0.40em' }}>|</p>
-                                    <a className="nav-link" href="#">Sign in</a> */}
+                     
 
                             <div className="dropdown">
 
@@ -43,8 +41,7 @@ function Navbar(){
                                                 </li>
                                                 <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử
                                                     đặt</a></li>
-                                                <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a>
-                                                </li>
+                                              
                                             </ul>
                                         </div>
 
@@ -59,7 +56,7 @@ function Navbar(){
                                             <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử
                                                 đặt</a>
                                             </li>
-                                            <li><a className="dropdown-item" href="">Chi tiết tài khoản</a></li>
+                                            
                                         </ul>
                                     </div>
                                 )}

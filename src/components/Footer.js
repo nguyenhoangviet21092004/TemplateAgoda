@@ -18,10 +18,10 @@ const Footer = () => {
               <div className="footer-links">
                 <h4>Quick Links</h4>
                 <ul className="list-unstyled">
-                  <li><a href="#">Home</a></li>
-                  <li><a href="#">Products</a></li>
-                  <li><a href="#">Services</a></li>
-                  <li><a href="#">Contact</a></li>
+                  <li><a >Home</a></li>
+                  <li><a >Products</a></li>
+                  <li><a >Services</a></li>
+                  <li><a >Contact</a></li>
                 </ul>
               </div>
             </div>

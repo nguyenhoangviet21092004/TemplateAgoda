@@ -99,7 +99,7 @@ function Confirm() {
                                     {role === 'admin' || role === 'host' ? (
                                         <>
                                             <li className="nav-item dropdown">
-                                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <a className="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     {username}
                                                 </a>
                                                 <ul className="dropdown-menu dropdown-menu-end">
@@ -112,12 +112,12 @@ function Confirm() {
                                         </>
                                     ) : (
                                         <li className="nav-item dropdown">
-                                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <a className="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 {username}
                                             </a>
                                             <ul className="dropdown-menu dropdown-menu-end">
                                                 <li><a href={`/history/${idAccount}`} className="dropdown-item">Lịch sử đặt</a></li>
-                                                <li><a className="dropdown-item" href="#">Chi tiết tài khoản</a></li>
+                                                <li><a className="dropdown-item" >Chi tiết tài khoản</a></li>
                                             </ul>
                                         </li>
                                     )}
