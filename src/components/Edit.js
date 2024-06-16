@@ -88,7 +88,7 @@ function Edit() {
                 formData.append("image", image);
 
                 await axios.put(
-                    `http://easygoing-passion.railway.internal/api/house/${params.id}`,
+                    `http://api-hotel.up.railway.app/api/house/${params.id}`,
                     formData,
                     {
                         headers: { "Content-Type": "multipart/form-data" },
